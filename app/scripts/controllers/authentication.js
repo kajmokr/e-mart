@@ -1,55 +1,12 @@
-
-emart.controller('loginCtrl', function ($scope, $http, $state, toaster, dataService) {
-/************************************************************************
- * LOGIN CONTROLLER
- * Manages login(), registerUser(), forgotPassword() function.
- ************************************************************************/
-
-// TODO: we might need to do all http requests in an AngularJS Service --> as normally this should not be in a controller
-
-
-    // LOGIN FUNCTION - If the login is successful the user is redirected to the home state
-    $scope.login = function () {
-
-        var request = $http({
-            method: "post",
-            url: "/scripts/php/login.php",
-            data: {
-                email: $scope.email,
-                password: $scope.password
-            },
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        });
-        /* Successful HTTP post request or not */
-        request.success(function (data) {
-            if(typeof data.userID != 'undefined'){
-                dataService.setCurrentUser(data);
-                $state.go('endingsoon');
-                toaster.pop({
-                    type: 'success',
-                    title: 'Welcome',
-                    body: 'Happy Shopping :)',
-                    showCloseButton: false,
-                    timeout: 2500
-                });
-            }
-            else {
-                toaster.pop({
-                    type: 'error',
-                    title: 'Error',
-                    body: 'Login unsuccessful :(',
-                    showCloseButton: false,
-                    timeout: 2500
-                });
-            }
-        });
-    };
-
+/********************************************************************************************************************
+ * MAIN CONTROLLER
+ ********************************************************************************************************************/
+emart.controller('authCtrl', function ($scope, $http, $state, toaster, authenticationService) {
+    
     // DATA FOR REGISTER FORM
     $scope.register = {};
     $scope.register.twUsername = false;
     $scope.register.twProfileImage = false;
-
     $scope.countries = [
         { "name": "Afghanistan", "code": "AF" },
         { "name": "Åland Islands", "code": "AX" },
@@ -342,6 +299,7 @@ emart.controller('loginCtrl', function ($scope, $http, $state, toaster, dataServ
 
     };
 
+    // register twitter
     $scope.registerTwitter = function() {
         var ref = new Firebase("https://emart.firebaseio.com");
 
@@ -356,9 +314,6 @@ emart.controller('loginCtrl', function ($scope, $http, $state, toaster, dataServ
                 });
             } else {
                 $scope.twDisabled = true;
-
-                console.log(authData);
-
                 $scope.register.twUsername = authData.twitter.username;
                 $scope.register.twProfileImage = authData.twitter.profileImageURL;
 
@@ -369,12 +324,12 @@ emart.controller('loginCtrl', function ($scope, $http, $state, toaster, dataServ
                     showCloseButton: false,
                     timeout: 2500
                 });
-             }
+            }
         });
 
     };
 
-    // Checks if form fields have been filled. If yes, try to register the user
+    // REGISTER USER
     $scope.registerUser = function () {
 
         if( $scope.register.country == undefined ||
@@ -390,90 +345,35 @@ emart.controller('loginCtrl', function ($scope, $http, $state, toaster, dataServ
                 showCloseButton: false,
                 timeout: 2000
             });
-            return;
+        }
+        else{
+            var user =  {
+                    username: $scope.register.username,
+                    email: $scope.register.email,
+                    password: $scope.register.password,
+                    firstname: $scope.register.firstname,
+                    lastname: $scope.register.lastname,
+                    address: $scope.register.address,
+                    city: $scope.register.city,
+                    postalcode: $scope.register.postalcode,
+                    country: $scope.register.country,
+                    telephoneNumber: $scope.register.phonenumber,
+                    usertype: $scope.register.usertype,
+                    twUsername: $scope.register.twUsername,
+                    twProfileImage: $scope.register.twProfileImage
+            };
+            authenticationService.registerUser(user);
         }
 
-        var request = $http({
-            method: "post",
-            url: "/scripts/php/register.php",
-            data: {
-                username: $scope.register.username,
-                email: $scope.register.email,
-                password: $scope.register.password,
-                firstname: $scope.register.firstname,
-                lastname: $scope.register.lastname,
-                address: $scope.register.address,
-                city: $scope.register.city,
-                postalcode: $scope.register.postalcode,
-                country: $scope.register.country,
-                telephoneNumber: $scope.register.phonenumber,
-                usertype: $scope.register.usertype,
-                twUsername: $scope.register.twUsername,
-                twProfileImage: $scope.register.twProfileImage
-            },
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        });
-        /* Successful HTTP post request or not */
-        request.success(function (data) {
-            if(data == true){
-                //Set user email in data service so it can be accessed from other parts of the app
-                dataService.setCurrentUser($scope.register.email, $scope.register.id);
-                $state.go('profile');
-                toaster.pop({
-                    type: 'success',
-                    title: 'Success',
-                    body: 'You have successfully registered your account. Welcome to E-Mart.',
-                    showCloseButton: false,
-                    timeout: 3000
-                });
-            }
-            else {
-                toaster.pop({
-                    type: 'error',
-                    title: 'Error',
-                    body: 'Failed to register user.',
-                    showCloseButton: false,
-                    timeout: 2000
-                });
-            }
-        });
     };
 
-    // Sends a forgot password email to the user if the account is registered on the system
+    // LOGIN USER
+    $scope.login = function (email, password) {
+        authenticationService.login(email, password);
+    };
+    
+    // SENDS A FORGOT PASSWORD EMAIL TO USER IF NOT REGISTERED
     $scope.forgotPassword = function () {
-
-        var request = $http({
-            method: "post",
-            url: "/scripts/php/sendEmail.php",
-            data: {
-                email: $scope.email,
-                emailtype: "forgotPassword"
-            },
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        });
-        /* Successful HTTP post request or not */
-        request.success(function (data) {
-            if(data == true){
-                $state.go('login');
-
-                toaster.pop({
-                    type: 'success',
-                    title: 'Success',
-                    body: 'We have sent you an email with a link to reset your password :)',
-                    showCloseButton: false,
-                    timeout: 2000
-                });
-            }
-            else {
-                toaster.pop({
-                    type: 'error',
-                    title: 'Error',
-                    body: 'Login was unsuccessful. Please try again!',
-                    showCloseButton: false,
-                    timeout: 2000
-                });
-            }
-        });
+        emailService.forgotPassword($scope.email);
     }
-
 });

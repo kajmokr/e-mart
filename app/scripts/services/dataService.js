@@ -1,22 +1,138 @@
-/************************************************************************************
- * This service provides a singleton for categories and conditions data
- ************************************************************************************/
-emart.service('dataService', ['$http','$cookies','toaster', function ($http, $cookies, toaster) {
-    var dataServiceScope = this;
+/********************************************************************************************************************
+ * DATA SERVICE
+ ********************************************************************************************************************/
+emart.service('dataService', function ($http, $cookies, $state, toaster, $timeout, emailService) {
+    
+    //--------------------------------------------------------------------
+    // SELLER / BUYER DATA SERVICES
+    //--------------------------------------------------------------------
+    // TODO: RETURN IMAGE IN QUERY AS WELL --> GET SOLD NOT WORKING 100%?
+    // GET SOLD ITEMS OF A USER
+    this.getSellerSoldItems = function (auctioneerID) {
+        var auctions = null;
+        return request = $http({
+            method: "post",
+            url: "/scripts/php/selectRowBysql.php",
+            data: {
+                sql: "SELECT auction.auctionID, auction.name, auction.description, auction.auctioneerID, "+
+                "auction.startDate, auction.endDate, auction.startingPrice, auction.instantPrice, auction.reservePrice, item.itemID, item.name, auction.isActive FROM auction, item "+
+                "WHERE auctioneerID="+ auctioneerID +
+                " AND auction.isActive=0 AND auction.itemID= item.itemID GROUP BY auction.auctionID;"
+            },
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function (response) {
+            console.log("GOT SOLD ITEMS", response);
+            if (response!==0) { //if no error when fetching database rows
+                auctions = response;
+                return auctions;
+            }
+            else {
+                console.log("Error response from database");
+            }
+        });
+    };
 
+    // TODO: RETURN IMAGE IN QUERY AS WELL
+    //GET ITEMS ON SALE FOR THE SELLER
+    this.getSellerAuctions = function (auctioneerID) {
+        var auctions = null;
+        return request = $http({
+            method: "post",
+            url: "/scripts/php/selectRowBysql.php",
+            data: {
+                sql: "SELECT auction.auctionID, auction.name, auction.description, auction.auctioneerID, "+
+                "auction.startDate, auction.endDate, auction.startingPrice, auction.instantPrice, auction.reservePrice, item.itemID, item.name, auction.isActive FROM auction, item "+
+                "WHERE auctioneerID="+ auctioneerID +
+                " AND auction.isActive=1 AND auction.itemID= item.itemID GROUP BY auction.auctionID;"
+            },
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function (response) {
+            console.log("GOT SELLER AUCTIONS", response);
+            if (response!==0) { //if no error when fetching database rows
+                auctions = response;
+                return auctions;
+            }
+            else {
+                console.log("Error response from database");
+            }
+        });
+    };
+    
+    //GET USER RATINGS
+    this.getUserRatings = function (userID) {
+        var ratings = null;
+        return request = $http({
+            method: "post",
+            url: "/scripts/php/selectRowBySql.php",
+            data: {
+                sql:'SELECT rating.description, rating.starRating, rating.created, user.userName, user.twProfileImage FROM rating INNER JOIN user ON rating.userID = '+userID+' AND rating.raterID=user.userID'
+            },
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function (response) {
+            if (response!==0) { //if no error when fetching database rows
+                ratings = response;
+                return ratings;
+            }
+            else {
+                console.log("Error response from database");
+            }
+        });
+    };
+
+    // GET USER DATA
+    this.getUser = function (userID) {
+        var user = null;
+        return request = $http({
+            method: "post",
+            url: "/scripts/php/selectRowBySql.php",
+            data: {
+                sql:'SELECT userName, twProfileImage, userType, city, dateRegistered, telephoneNumber, emailAddress, firstname, lastname' +
+                ' FROM user WHERE userID='+userID
+            },
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function (response) {
+            if (response!==0) { //if no error when fetching database rows
+                user = response;
+                return user;
+            }
+            else {
+                console.log("Error response from database");
+            }
+        });
+    };
+    //---------------------------------------------------------------------
+    
+    
+    //---------------------------------------------------------------------
+    // ITEM SERVICES
+    //---------------------------------------------------------------------
     //Store categories and conditions here
-    dataServiceScope.categories = null;
-    dataServiceScope.conditions = null;
+    this.categories = null;
+    this.conditions = null;
     //Hashed categories and conditions by ID
-    dataServiceScope.hashedCategories = null;
-    dataServiceScope.hashedConditions = null;
-
-    //User session tracking
-    dataServiceScope.userLoggedIn = false;
-    dataServiceScope.userObject = null;
-
+    this.hashedCategories = null;
+    this.hashedConditions = null;
+    
+    this.deleteItem = function(itemID) {
+        var deleteItem = $http({
+            method: 'post',
+            url: "/scripts/php/editRowsBySQL.php",
+            data: {
+                sql: "DELETE FROM item WHERE itemID="+itemID
+            }
+        }).then(function (response) {
+            if (response!==0) { //if no error when fetching database rows
+                return true;
+            }
+            else {
+                console.log("Error response from database");
+                return false;
+            }
+        });
+    };
+    
     //Hashes an array of object by hashfield property, returns a hashed object (table)
-    dataServiceScope.generateHashTable = function (array, hashfield) {
+    generateHashTable = function (array, hashfield) {
         var hashTable = {};
         array.forEach(function (element, index) {
             var currentHashKey = element[hashfield]+"";
@@ -26,26 +142,8 @@ emart.service('dataService', ['$http','$cookies','toaster', function ($http, $co
         return hashTable;
     };
 
-    //SET THE CURRENT USER
-    dataServiceScope.setCurrentUser = function (usr) {
-        dataServiceScope.userLoggedIn = true;
-        dataServiceScope.userObject = usr;
-
-        // Setting a cookie
-        $cookies.put('userID', usr.userID);
-        $cookies.put('userName', usr.userName);
-        $cookies.put('twUsername', usr.twUsername);
-        $cookies.put('twProfileImage', usr.twProfileImage);
-        $cookies.put('firstName', usr.firstName);
-        $cookies.put('lastName', usr.lastName);
-        $cookies.put('userType', usr.userType);
-        $cookies.put('dateRegistered', usr.dateRegistered);
-        $cookies.put('city', usr.city);
-
-    };
-
     //GET THE CONDITION BY ID
-    dataServiceScope.getConditionbyID = function (conditionID) {
+    this.getConditionbyID = function (conditionID) {
         if (dataServiceScope.conditions!=null) {
             dataServiceScope.conditions.forEach (function (condition) {
                 if (condition.conditionID==conditionID) return condition;
@@ -55,7 +153,7 @@ emart.service('dataService', ['$http','$cookies','toaster', function ($http, $co
     };
 
     //GET CONDITIONS AND CATEGORIES FROM DATABASE
-    dataServiceScope.getData = function() {
+    this.getData = function() {
         // Angular $http() and then() both return promises themselves
         //Let's pull categories
         var data = {};
@@ -70,11 +168,11 @@ emart.service('dataService', ['$http','$cookies','toaster', function ($http, $co
             if (response!==0) { //if no error when fetching database rows
                 data.categories = response.data.category;
                 data.conditions = response.data.itemcondition;
-                dataServiceScope.categories = response.data.category;
-                dataServiceScope.conditions = response.data.itemcondition;
+                this.categories = response.data.category;
+                this.conditions = response.data.itemcondition;
                 //hash  conditions by conditions Id dataServiceScope.conditions, and same for categories
-                dataServiceScope.hashedCategories = dataServiceScope.generateHashTable(dataServiceScope.categories, "categoryID");
-                dataServiceScope.hashedConditions = dataServiceScope.generateHashTable(dataServiceScope.conditions, "conditionID");
+                this.hashedCategories = generateHashTable(this.categories, "categoryID");
+                this.hashedConditions = generateHashTable(this.conditions, "conditionID");
                 //console.log(dataServiceScope.hashedConditions, dataServiceScope.hashedCategories);
                 return data;
             }
@@ -83,13 +181,19 @@ emart.service('dataService', ['$http','$cookies','toaster', function ($http, $co
             }
         });
     };
-
-    //call it
-    dataServiceScope.getData();
-
-
+    
+    //GET THE CONDITION BY ID
+    this.getConditionbyID = function (conditionID) {
+        if (dataServiceScope.conditions!=null) {
+            dataServiceScope.conditions.forEach (function (condition) {
+                if (condition.conditionID==conditionID) return condition;
+            })
+        }
+        return null;
+    };
+    
     //GET ALL LIVE AUCTIONS
-    dataServiceScope.getAllLiveAuctions = function () {
+    this.getAllLiveAuctions = function () {
         return request = $http({
             method: "post",
             url: "/scripts/php/selectRowsGeneric.php",
@@ -109,82 +213,9 @@ emart.service('dataService', ['$http','$cookies','toaster', function ($http, $co
             }
         });
     };
-
-    //GET USER RATINGS
-    dataServiceScope.getUserRatings = function (userID) {
-        var ratings = null;
-        return request = $http({
-            method: "post",
-            url: "/scripts/php/selectRowBySql.php",
-            data: {
-                sql:'SELECT rating.description, rating.starRating, rating.created, user.userName, user.twProfileImage FROM rating INNER JOIN user ON rating.userID = '+userID+' AND rating.raterID=user.userID'
-            },
-            headers: { 'Content-Type': 'application/json' }
-        }).then(function (response) {
-            console.log("GOT USER RATINGS", response);
-            if (response!==0) { //if no error when fetching database rows
-                ratings = response;
-                return ratings;
-            }
-            else {
-                console.log("Error response from database");
-            }
-        });
-    };
-
-    //GET SOLD ITEMS
-    dataServiceScope.getSellerSoldItems = function (auctioneerID) {
-        return request = $http({
-            method: "post",
-            url: "/scripts/php/selectRowBysql.php",
-            data: {
-                sql: "SELECT auction.auctionID, auction.name, auction.description, auction.currentBidID, item.itemID, item.name, "+
-                "item.buyerID, item.isSold, bid.bidID, bid.bidPrice, user.userID, user.firstName, user.userName, user.emailAddress "+
-                "FROM auction, item, bid, user "+
-                "WHERE item.ownerID="+auctioneerID+
-                " AND item.isSold=1 AND auction.itemID = item.itemID AND item.buyerID=user.userID"+
-                " AND auction.currentBidID=bid.bidID GROUP BY auction.auctionID;"
-            },
-
-        headers: { 'Content-Type': 'application/json' }
-        }).then(function (response) {
-            console.log("GOT SOLD ITEMS", response);
-            if (response!==0) { //if no error when fetching database rows
-                return response;
-            }
-            else {
-                console.log("Error response from database");
-            }
-        });
-    };
-
-
-    //GET ITEMS ON SALE FOR THE SELLER
-    dataServiceScope.getSellerAuctions = function (auctioneerID) {
-        var auctions = null;
-        return request = $http({
-            method: "post",
-            url: "/scripts/php/selectRowBysql.php",
-            data: {
-                sql: "SELECT auction.auctionID, auction.name, auction.description, auction.auctioneerID, "+
-                "auction.startDate, auction.endDate, auction.startingPrice, auction.instantPrice, auction.reservePrice, item.itemID, item.name, auction.isActive FROM auction, item "+
-                "WHERE auctioneerID="+$cookies.get('userID')+
-                " AND auction.itemID= item.itemID GROUP BY auction.auctionID;"
-            },
-            headers: { 'Content-Type': 'application/json' }
-        }).then(function (response) {
-            console.log("GOT SELLER AUCTIONS", response);
-            if (response!==0) { //if no error when fetching database rows
-                return response;
-            }
-            else {
-                console.log("Error response from database");
-            }
-        });
-    };
-
+    
     //GET IMAGES FOR AN ITEM
-    dataServiceScope.getItemImage = function(itemID) {
+    this.getItemImage = function(itemID) {
 
         var image = {};
         return request = $http({
@@ -207,7 +238,7 @@ emart.service('dataService', ['$http','$cookies','toaster', function ($http, $co
 
     //ADD A BOOKMARK
     //function to add bookmark
-    dataServiceScope.addBookmark = function (auctionID) {
+    this.addBookmark = function (auctionID) {
         return request = $http({
             method: "post",
             url: "/scripts/php/addbookmark.php",
@@ -239,4 +270,6 @@ emart.service('dataService', ['$http','$cookies','toaster', function ($http, $co
         })
     }
 
-}]);
+    
+    
+});

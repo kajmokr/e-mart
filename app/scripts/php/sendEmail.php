@@ -22,7 +22,7 @@ function forgotPassword($emailTO) {
                             <head></head>
                             <body>
                                 <p>You have been outbid by another bidder.
-                    Please click on the link below to bid agiain:<br>
+                                Please click on the link below to bid agiain:<br>
                                 <span><a href=\"www.e-mart.azurewebsites.net\">URL</a></span>
                                 </p>
                             </body>
@@ -31,7 +31,6 @@ function forgotPassword($emailTO) {
             'from' => 'info@emart.com'
         );
 }
-
 
 function sendemailtobidder ($emailTO) {
     global $user, $pass;
@@ -77,9 +76,25 @@ function sendemailtoauctioneer ($emailTO) {
     );
 }
 
+function sendMail($emailTO, $body, $title) {
+    global $user, $pass;
 
-
-
+    return $params = array(
+        'api_user' => $user,
+        'api_key' => $pass,
+        'to' => $emailTO,
+        'subject' => 'E-Mart: ' . $title,
+        'html' =>   "<html>
+                            <head></head>
+                            <body>
+                                <p>
+                                " . $body . "
+                                </p>
+                            </body>
+                        </html>",
+        'from' => 'info@emart.com'
+    );
+}
 
 
 // EXECUTES PHP SCRIPT AND CHECKS WHICH FUNCTION TO CALL
@@ -121,6 +136,13 @@ if(isset($_POST)) {
             $email = $request->email;
             error_log($request->email);
             $params = forgotPassword($email);
+            break;
+        }
+        case "standard": {
+            $email = $request->email;
+            $body = $request->body;
+            $title = $request->title;
+            $params = sendMail($email, $body, $title);
             break;
         }
 

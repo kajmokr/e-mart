@@ -1,47 +1,92 @@
-
-emart.controller('profileCtrl', function ($scope, $http, $state, toaster, $cookies, dataService) {
-/************************************************************************
+/********************************************************************************************************************
  * PROFILE CONTROLLER
- ************************************************************************/
+ ********************************************************************************************************************/
+emart.controller('profileCtrl', function ($rootScope, $scope, $http, $state, $cookies,
+                                          $timeout, toaster, authenticationService, dataService, $stateParams) {
 
-    $scope.data = {}; //creating new scope that can be used inside tabset
-    $scope.data.categories = dataService.hashedCategories;
-    $scope.data.conditions = dataService.hashedConditions;
+    $scope.ratings = true;
+    $scope.sold = false;
+    $scope.auctions = false;
+    
+    console.log($stateParams.userID);
 
+    //--------------------------------
+    // TOGGLE VIEWS
+    //--------------------------------
+    $scope.viewRatings = function () {
+        $scope.ratings = true;
+        $scope.auctions = false;
+        $scope.sold = false;
 
-    $scope.data.getCategoryOfItem = function (item) {
-        return $scope.data.categories[item.categoryID].name;
+        if ($scope.tempUser.ratings.length == 0){
+            var message = $stateParams.userID === $cookies.get('userID') ? "You haven't received any ratings yet :/" : "User hasn't been rated yet.";
+            toaster.pop({
+                type: 'error',
+                title: 'Error',
+                body: message,
+                showCloseButton: true,
+                timeout: 10000
+            });
+        }
+    };
+    $scope.viewSold = function () {
+        $scope.sold = true;
+        $scope.ratings = false;
+        $scope.auctions = false;
+        
+        if ($scope.tempUser.soldItems.length == 0){
+            var message = $stateParams.userID === $cookies.get('userID') ? "You haven't sold anything yet!" : "User hasn't yet sold anything.";
+            toaster.pop({
+                type: 'error',
+                title: 'Error',
+                body: message,
+                showCloseButton: true,
+                timeout: 10000
+            });
+        }
+        
+    };
+    $scope.viewAuctions = function () {
+        $scope.auctions = true;
+        $scope.sold = false;
+        $scope.ratings = false;
+        
+        if ($scope.tempUser.auctions.length == 0){
+            var message = $stateParams.userID === $cookies.get('userID') ? "You don't have any auctions!" : "User does not have any auctions";
+            toaster.pop({
+                type: 'error',
+                title: 'Error',
+                body: message,
+                showCloseButton: true,
+                timeout: 10000
+            });
+        }
     };
 
-    $scope.data.getConditionOfItem = function (item) {
-        return $scope.data.conditions[item.conditionID].name;
-    };
-
-    $scope.data.getItemNamebyID = function (itemID) {
-        return $scope.data.hashedItems[itemID].name;
-    };
-
-    //Get ratings of the current user
-    var userRatingsPromise = dataService.getUserRatings($cookies.get('userID'));
-    userRatingsPromise.then(function(result) {
-        $scope.data.ratings = result.data;
+    var userPromise = dataService.getUser($stateParams.userID ? $stateParams.userID : $cookies.get('userID'));
+    userPromise.then(function(result){
+        $scope.tempUser = result.data[0]
     });
 
-    //Get items of the current user
-    var sellerItemsPromise = dataService.getSellerItems($cookies.get('userID'));
-    sellerItemsPromise.then(function(result) {
-        //inside promise then
-        $scope.data.items = result.data;
-        $scope.data.hashedItems = dataService.generateHashTable($scope.data.items, "itemID");
-    });
-
-    //Get the auctions of the current user
-    var sellerAuctionsPromise = dataService.getSellerAuctions($cookies.get('userID'));
-    sellerAuctionsPromise.then(function(result) {
+    // GET ITEMS ON SALE OF CURRENT USER
+    var auctionsPromise = dataService.getSellerAuctions($stateParams.userID ? $stateParams.userID : $cookies.get('userID'));
+    auctionsPromise.then(function(result) {
         console.log(result.data);
-        $scope.data.auctions = result.data;
+        $scope.tempUser.auctions = result.data;
     });
 
-
-
+    // GET SOLD ITEMS OF CURRENT USER
+    var soldItemsPromise = dataService.getSellerSoldItems($stateParams.userID ? $stateParams.userID : $cookies.get('userID'));
+    soldItemsPromise.then(function(result) {
+        console.log(result.data);
+        $scope.tempUser.soldItems = result.data;
+    });
+    
+    //GET RATINGS OF CURRENT USER
+    var userRatingsPromise = dataService.getUserRatings($stateParams.userID ? $stateParams.userID : $cookies.get('userID'));
+    userRatingsPromise.then(function(result) {
+        console.log(result.data);
+        $scope.tempUser.ratings = result.data;
+    });
+    
 });

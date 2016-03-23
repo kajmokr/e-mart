@@ -4,23 +4,22 @@
  * Initial there are written stat for all view in theme.
  ************************************************************************/
 
-emart.config(function ($stateProvider, $urlRouterProvider, flowFactoryProvider){
+emart.config(function ($stateProvider, $urlRouterProvider){
 
     //Flow factory for file uploads
 
-    flowFactoryProvider.defaults = {
-        target: 'php/upload.php',
-        permanentErrors: [404, 500, 501],
-        maxChunkRetries: 1,
-        chunkRetryInterval: 5000,
-        simultaneousUploads: 4
-    };
-    flowFactoryProvider.on('catchAll', function (event) {
-        console.log('catchAll', arguments);
-    });
+    // flowFactoryProvider.defaults = {
+    //     target: 'php/upload.php',
+    //     permanentErrors: [404, 500, 501],
+    //     maxChunkRetries: 1,
+    //     chunkRetryInterval: 5000,
+    //     simultaneousUploads: 4
+    // };
+    // flowFactoryProvider.on('catchAll', function (event) {
+    //     console.log('catchAll', arguments);
+    // });
 
-
-    $urlRouterProvider.otherwise("/endingsoon");
+    $urlRouterProvider.otherwise("/login");
 
     $stateProvider
 
@@ -33,62 +32,85 @@ emart.config(function ($stateProvider, $urlRouterProvider, flowFactoryProvider){
         })
 
         //-----------------------------------------------------
-        // LOGIN | REGISTER | FORGOT PASSWORD
+        // AUTHENTICATION - LOGIN | REGISTER | FORGOT PASSWORD
         //-----------------------------------------------------
         .state('login', {
             url: "/login",
-            templateUrl: "views/login.html",
+            controller: "authCtrl",
+            templateUrl: "views/authentication/login.html",
             data: { pageTitle: 'Login', specialClass: 'gray-bg' }
         })
         .state('register', {
             abstract: true,
-            templateUrl: "views/register/register.html",
+            controller: "authCtrl",
+            templateUrl: "views/authentication/register.html",
             data: { pageTitle: 'Register', specialClass: 'gray-bg' }
         })
         .state('register1', {
             parent: 'register',
             url: '/register',
-            templateUrl: 'views/register/register1.html'
+            templateUrl: 'views/authentication/register1.html'
         })
         .state('register2', {
             parent: 'register',
             url: '/register2',
-            templateUrl: 'views/register/register2.html'
+            templateUrl: 'views/authentication/register2.html'
         })
         .state('register3', {
             parent: 'register',
             url: '/register3',
-            templateUrl: 'views/register/register3.html'
+            templateUrl: 'views/authentication/register3.html'
         })
         .state('forgot_password', {
             url: "/forgot_password",
-            templateUrl: "views/forgot_password.html",
+            controller: "authCtrl",
+            templateUrl: "views/authentication/forgot_password.html",
             data: { pageTitle: 'Forgot password', specialClass: 'gray-bg' }
         })
 
         //-----------------------------------------------------
         // PROFILE
         //-----------------------------------------------------
-        .state('profile', {
-            templateUrl: "views/common/content.html",
-            controller: "profileCtrl",
-            data: { mainState: 'profile.rating', mainStateName: 'Profile', name: 'My Account' }
-        })
-        .state('profile.rating', {
-            url: "/profile",
-            templateUrl: "views/profile/ratings.html",
-            data: { pageTitle: 'My Account | Profil Rating', subStateName: 'Rating' }
+        .state ('profile', {
+            parent: 'root',
+            url: '/profile',
+            controller: 'profileCtrl',
+            templateUrl: 'views/profile/profile.html',
+            params: { userID: null },
+            resolve: { authenticate: authenticate },
+            data: { name: 'My Profile', mainState: 'profile', hide: true, pageTitle: 'E-Mart: My Profile' }
         })
 
         //-----------------------------------------------------
-        // ENDING SOON
+        // BUYER DASHBOARD
         //-----------------------------------------------------
-        .state('endingsoon', {
+        .state('buyer', {
+            templateUrl: "views/common/content.html",
+            data: { mainState: 'buyer.bids', mainStateName: 'My Bids', name: 'Buyer Dashboard' }
+        })
+        .state('buyer.mybids', {
+            url: "/bybids",
+            templateUrl: "views/buyer/mybids.html",
+            // controller: "BuyerDashboardCtrl",
+            data: { pageTitle: 'Buyer Dashboard | My Bids' }
+        })
+        .state('buyer.boughtItems', {
+            url: "/bought-items",
+            templateUrl: "views/buyer/boughtItems.html",
+            // controller: "boughtItemsCtrl",
+            data: { pageTitle: 'Buyer Dashboard | Bought Items', subStateName: "Bought Items" }
+        })
+        .state('buyer.bookmarks', {
+            url: "/bookmarks",
+            templateUrl: "views/buyer/bookmarks.html",
+            // controller: "bookmarkCtrl",
+            data: { pageTitle: 'Buyer Dashboard | Bookmarks', subStateName: "Bookmarks" }
+        })
+        .state('buyer.createbid', {
             parent: "root",
-            url: "/endingsoon",
-            controller: "auctionListCtrl",
-            templateUrl: "views/buyer/ending_soon.html",
-            data: { mainState: 'endingsoon', mainStateName: 'Buyer', name: 'Ending Soon', hide: true, toggleView: false }
+            url:"/createbid?:id&{other}",
+            param: { id: null, other: null },
+            data: { pageTitle: "Create Bid" }
         })
 
         //-----------------------------------------------------
@@ -120,7 +142,6 @@ emart.config(function ($stateProvider, $urlRouterProvider, flowFactoryProvider){
             templateUrl: "views/seller/seller_sold.html",
             data: { pageTitle: 'Seller Dashboard | Items Sold', subStateName: 'Items Sold' }
         })
-
         .state('seller.edititem', {
             url:"/edititem?:itemid",
             controller: "editItemCtrl",
@@ -135,122 +156,69 @@ emart.config(function ($stateProvider, $urlRouterProvider, flowFactoryProvider){
             templateUrl: "views/seller/addauction.html",
             data: {pageTitle: "Create Auction"}
         })
-
-        //-----------------------------------------------------
-        // BUYER DASHBOARD
-        //-----------------------------------------------------
-        .state('buyer', {
-            templateUrl: "views/common/content.html",
-            data: { mainState: 'buyer.bids', mainStateName: 'My Bids', name: 'Buyer Dashboard' }
-        })
-        .state('buyer.mybids', {
-            url: "/bybids",
-            templateUrl: "views/buyer/mybids.html",
-            controller: "BuyerDashboardCtrl",
-            data: { pageTitle: 'Buyer Dashboard | My Bids' }
-        })
-        .state('buyer.boughtItems', {
-            url: "/bought-items",
-            templateUrl: "views/buyer/boughtItems.html",
-            controller: "boughtItemsCtrl",
-            data: { pageTitle: 'Buyer Dashboard | Bought Items', subStateName: "Bought Items" }
-        })
-        .state('buyer.bookmarks', {
-            url: "/bookmarks",
-            templateUrl: "views/buyer/bookmarks.html",
-            controller: "bookmarkCtrl",
-            data: { pageTitle: 'Buyer Dashboard | Bookmarks', subStateName: "Bookmarks" }
-        })
-
-
-        .state('buyer.createbid', {
-            parent: "root",
-            url:"/createbid?:id&{other}",
-            templateUrl: function (param){
-                return "views/buyer/createbid.html?id="+param.id +"&other="+param.other
-            },
-            data: {pageTitle: "Create Bid"}
-        })
-        .state('cart', {
-            parent: "root",
-            url: "/cart",
-            templateUrl: "views/ecommerce_cart.html",
-            data: { pageTitle: 'Cart' }
-        })
-        .state('invoice', {
-            parent: "root",
-            url: "/invoice",
-            templateUrl: "views/buyer/invoice.html",
-            data: { pageTitle: 'Invoice' }
-        })
-        .state('payments', {
-            parent: "root",
-            url: "/payments",
-            templateUrl: "views/ecommerce_payments.html",
-            data: { pageTitle: 'E-commerce payments' }
-        })
-
+            
         //-----------------------------------------------------
         // E-COMMERCE
         //-----------------------------------------------------
         .state('ecommerce', {
             templateUrl: "views/common/content.html",
             controller: "ecommerceCtrl",
+            resolve: { authenticate: authenticate },
             data: { mainState: 'ecommerce.grid', mainStateName: 'Browsing', name: 'Browsing Auctions', toggleView: true }
         })
         .state('ecommerce.grid', {
             url:"/ecommerce?:categoryid",
-            controller: "auctionListCtrl",
-            templateUrl: function (param){
-                return "views/ecommerce/products_grid.html?categoryid="+param.id;
-            },
+            param:{ categoryid: null },
+            templateUrl: "views/ecommerce/products_grid.html",
             data: { pageTitle: 'Browsing Auctions | By Category', subStateName: 'By Category' }
         })
         .state('ecommerce.list', {
             url: "/ecommerce-list?:categoryid",
-            templateUrl: function (param){
-                return "views/ecommerce/ecommerce_product_list.html?categoryid="+param.id;
-            },
+            param:{ categoryid: null },
+            templateUrl: "views/ecommerce/products_list.html",
             data: { pageTitle: 'E-commerce | Product List', subStateName: 'Product List' }
         })
         .state('ecommerce.details', {
             url: "/ecommerce-details",
-            params: {
-                itemid: null,
-                auctionid: null
-            },
-            controller: "productDetailsCtrl",
+            params: { itemid: null, auctionid: null},
+            // controller: "productDetailsCtrl",
             templateUrl: "views/ecommerce/ecommerce_product_details.html",
             data: { pageTitle: 'Browsing Auctions | Auction Details', subStateName: 'Auction Details' }
         })
-        .state('bidhistory', {
-            parent: "root",
+        .state('ecommerce.bidhistory', {
             url: "/bidhistory?:id&{other}",
-            templateUrl: function (param){
-                return "views/ecommerce/bidhistory.html?id="+param.id +"&other="+param.other
-            },
+            param:{ id: null, other: null },
+            templateUrl: "views/ecommerce/bidhistory.html",
             data: { pageTitle: 'View Bid' }
         })
-
+        .state('ecommerce.endingsoon', {
+            url: "/ecommerce-endingsoon",
+            templateUrl: "views/buyer/ending_soon.html",
+            data: { mainState: 'endingsoon', mainStateName: 'Buyer', name: 'Ending Soon', hide: true, toggleView: false }
+        })
+            
         //-----------------------------------------------------
-        // HELP & OTHERS
+        // HELP & OTHERS & VIDEO
         //-----------------------------------------------------
         .state('faq', {
             parent: "root",
             url: "/faq",
             templateUrl: "views/other/faq.html",
+            resolve: { authenticate: authenticate },
             data: { pageTitle: 'FAQ', name: 'Help', mainStateName: 'Frequently Asked Questions' }
         })
         .state('contact', {
             parent: "root",
             url: "/contact",
             templateUrl: "views/other/contactUs.html",
+            resolve: { authenticate: authenticate },
             data: { pageTitle: 'Contact us', name: 'Help', mainStateName: 'Contact us' }
         })
         .state('tos', {
             parent: "root",
             url: "/tos",
             templateUrl: "views/other/tos.html",
+            resolve: { authenticate: authenticate },
             data: { pageTitle: 'Terms & Conditions', name: 'Help', mainStateName: 'Terms & Conditions' }
         })
         .state('search', {
@@ -258,16 +226,46 @@ emart.config(function ($stateProvider, $urlRouterProvider, flowFactoryProvider){
             url:"/search",
             templateUrl: "views/other/search.html",
             controller: "searchCtrl",
+            resolve: { authenticate: authenticate },
             data: { pageTitle: 'Search Results', name: 'Search Results', hide: true }
         })
-
-        //-----------------------------------------------------
-        // VIDEO
-        //-----------------------------------------------------
         .state('video', {
             parent: "root",
             url: "/video",
             templateUrl: "views/other/video.html",
+            resolve: { authenticate: authenticate },
             data: { pageTitle: 'Video', name: 'Video', hide: true }
-        })
+        });
+    
+        //-----------------------------------------------------
+        // ONLY ALLOW LOGGED IN USERS TO ACCESS APP ROUTES
+        //-----------------------------------------------------
+        // source: http://stackoverflow.com/questions/22537311/angular-ui-router-login-authentication
+        function authenticate($q, $cookies, $state, $timeout, toaster, $rootScope) {
+            if ($cookies.get('loggedIn')) {
+
+                // get logged in user from cookies
+                $rootScope.user = JSON.parse($cookies.get('user'));
+                // Resolve the promise successfully
+                return $q.when()
+            } else {
+                // The next bit of code is asynchronously tricky.
+                $timeout(function() {
+                    // This code runs after the authentication promise has been rejected.
+                    // Go to the log-in page
+                    toaster.pop({
+                        type: 'error',
+                        title: 'Error',
+                        body: 'Login is required to access that page.',
+                        showCloseButton: false,
+                        timeout: 2000
+                    });
+                    $state.go('login')
+                });
+
+                // Reject the authentication promise to prevent the state from loading
+                return $q.reject()
+            }
+        }
+    
 });

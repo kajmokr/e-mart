@@ -1,48 +1,36 @@
-/**
- * MainCtrl - controller
- */
+/********************************************************************************************************************
+ * MAIN CONTROLLER
+ ********************************************************************************************************************/
+emart.controller('mainCtrl', function ($rootScope, $scope, $http, $state, $cookies, $timeout, toaster, authenticationService, dataService) {
 
-emart.controller('MainCtrl', function ($scope, $http, $state, $cookies, dataService, toaster, $timeout) {
+    // ----------------------------------------------------------------
+    // TOP NAVBAR CONTROLLER
+    //Search service
+    console.log($state.current.name);
 
-    $scope.user = {};
-    $scope.maindata = {};
-
-    //GET USER INFORMATION FROM COOKIE
-    $scope.user.userID = $cookies.get('userID');
-    $scope.user.userName = $cookies.get('userName');
-    $scope.user.twUsername = $cookies.get('twUsername');
-    $scope.user.twProfileImage = $cookies.get('twProfileImage');
-    $scope.user.firstName = $cookies.get('firstName');
-    $scope.user.lastName = $cookies.get('lastName');
-    $scope.user.userType = $cookies.get('userType');
-    $scope.user.dateRegistered = $cookies.get('dateRegistered') ? new Date($cookies.get('dateRegistered').replace(/-/g,"/")) : null;
-    $scope.user.city = $cookies.get('city');
+    $scope.data.navSearch = function () {
+        $state.go('search');
+        searchService.setSearchTerm($scope.data.navSearchTerm);
+    };
+    // ----------------------------------------------------------------
+    
+    
+    $rootScope.rootData = {};
+    
+    //LOGOUT FUNCTION
+    $rootScope.logout = function () {
+        authenticationService.logout();
+    };
 
     //GET CATEGORIES AND CONDITIONS USING DATA SERVICE
     var myDataPromise = dataService.getData();
     myDataPromise.then(function(result) {
-        $scope.maindata.categories = result.categories;
-        $scope.maindata.conditions = result.conditions;
+        $rootScope.rootData.categories = result.categories;
+        $rootScope.rootData.conditions = result.conditions;
     });
 
-    //LOGOUT FUNCTION
-    $scope.logout = function () {
-        $timeout(function() {
-            var cookies = $cookies.getAll();
-            angular.forEach(cookies, function (v, k) {
-                $cookies.remove(k);
-            });
-        });
-        $state.go('login');
-        toaster.pop({
-            type: 'success',
-            title: 'Success',
-            body: 'Logout successful! See you soon :)',
-            showCloseButton: false,
-            timeout: 3000
-        });
-    };
 
+    // TODO: WHAT IS THIS FOR?
     //START EMAILING SERVICE
     (function () {
         return request = $http({
@@ -59,5 +47,5 @@ emart.controller('MainCtrl', function ($scope, $http, $state, $cookies, dataServ
             }
         });
     })();
-
+    
 });

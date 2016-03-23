@@ -2,13 +2,10 @@
 <html ng-app="emart">
 
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!-- Page title set in pageTitle directive -->
     <title page-title></title>
-
     <!-- Google Open Sans -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
 
@@ -45,7 +42,6 @@
     <!--Clockpicker-->
     <link rel="stylesheet" type="text/css" href="bower_components/angular-clockpicker/dist/angular-clockpicker.css">
 
-
     <!-- Main Emart CSS files -->
     <!-- endbower -->
     <!-- endbuild -->
@@ -55,18 +51,16 @@
     <link href="styles/style.css" rel="stylesheet">
     <!-- endbuild -->
 
-
 </head>
 
 <!-- ControllerAs syntax -->
 <!-- Main controller with several data used in E-Mart theme on different view -->
-<body ng-controller="MainCtrl as main" class="{{$state.current.data.specialClass}}">
+<body ng-controller="mainCtrl as main" class="{{$state.current.data.specialClass}}">
 
 <toaster-container></toaster-container>
 
 <!-- Main view  -->
 <div ui-view></div>
-
 
 <!-- build:js(.) scripts/vendor.js -->
 
@@ -128,36 +122,25 @@
 <!-- endbuild -->
 
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
-<!-- Custom and plugin javascript -->
-<script src="scripts/emart.js"></script>
 
 <!-- Angular App Script -->
 <script src="scripts/app.js"></script>
 <script src="scripts/config.js"></script>
-<script src="scripts/directives/directives.js"></script>
+<script src="scripts/directives.js"></script>
 
 <!--Angular Controller -->
 <script src="scripts/controllers/main.js"></script>
-<script src="scripts/controllers/login.js"></script>
-<script src="scripts/controllers/additem.js"></script>
-<script src="scripts/controllers/addAuction.js"></script>
-<script src="scripts/controllers/createBid.js"></script>
-<script src="scripts/controllers/bidhistory.js"></script>
-<script src="scripts/controllers/sellerDashboard.js"></script>
-<script src="scripts/controllers/buyerDashboard.js"></script>
-<script src="scripts/controllers/edititem.js"></script>
+<script src="scripts/controllers/authentication.js"></script>
 <script src="scripts/controllers/profile.js"></script>
 <script src="scripts/controllers/ecommerce.js"></script>
-<script src="scripts/controllers/search.js"></script>
-<script src="scripts/controllers/topnavbar.js"></script>
-<script src="scripts/controllers/auctionList.js"></script>
-<script src="scripts/controllers/productDetails.js"></script>
-
 
 
 <!--Angular Services -->
+<script src="scripts/services/authenticationService.js"></script>
+<script src="scripts/services/emailService.js"></script>
 <script src="scripts/services/dataService.js"></script>
 <script src="scripts/services/searchService.js"></script>
+
 
 <!-- endbuild -->
 
