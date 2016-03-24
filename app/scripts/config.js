@@ -171,7 +171,7 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         })
         .state('ecommerce.list', {
             url: "/ecommerce-list",
-            templateUrl: "views/ecommerce/products_list.html",
+            templateUrl: "views/ecommerce/ecommerce_product_list.html",
             data: { pageTitle: 'E-commerce | Product List', subStateName: 'Product List' }
         })
         .state('ecommerce.details', {

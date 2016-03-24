@@ -11,7 +11,16 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     var auctionPromise = dataService.getAllLiveAuctions($stateParams.categoryid);
     auctionPromise.then(function(result) {
         console.log(result);
+        $scope.auctions = result;
     });
+
+    $scope.toggleView = function() {
+        if ($state.current.name == "ecommerce.grid"){
+            $state.go("ecommerce.list");
+        }
+        else{ $state.go("ecommerce.grid"); }
+    };
+    
     
     // //CONTACT BUYER / SELLER
     // $scope.goToURL = function (email, subject) {
