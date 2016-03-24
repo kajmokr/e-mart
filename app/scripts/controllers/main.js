@@ -1,7 +1,7 @@
 /********************************************************************************************************************
  * MAIN CONTROLLER
  ********************************************************************************************************************/
-emart.controller('mainCtrl', function ($rootScope, $scope, $http, $state, $cookies, $timeout, toaster, authenticationService, dataService) {
+emart.controller('mainCtrl', function ($rootScope, $scope, $http, $cookies, $timeout, toaster, authenticationService, dataService) {
     
     $rootScope.rootData = {};
     $scope.searchTerm = "";

@@ -6,25 +6,20 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
     //--------------------------------------------------------------------
     // SELLER / BUYER DATA SERVICES
     //--------------------------------------------------------------------
-    // TODO: RETURN IMAGE IN QUERY AS WELL --> GET SOLD NOT WORKING 100%?
-    // GET SOLD ITEMS OF A USER
-    this.getSellerSoldItems = function (auctioneerID) {
-        var auctions = null;
+    this.getSellerSoldItems = function (userID) {
+        var soldItems = null;
         return request = $http({
             method: "post",
             url: "/scripts/php/selectRowBysql.php",
             data: {
-                sql: "SELECT auction.auctionID, auction.name, auction.description, auction.auctioneerID, "+
-                "auction.startDate, auction.endDate, auction.startingPrice, auction.instantPrice, auction.reservePrice, item.itemID, item.name, auction.isActive FROM auction, item "+
-                "WHERE auctioneerID="+ auctioneerID +
-                " AND auction.isActive=0 AND auction.itemID= item.itemID GROUP BY auction.auctionID;"
+                sql: "SELECT *" +
+                " FROM item INNER JOIN auction ON item.ownerID="+ userID + " AND item.isSold=1 AND auction.auctioneerID="+ userID
             },
             headers: { 'Content-Type': 'application/json' }
         }).then(function (response) {
-            console.log("GOT SOLD ITEMS", response);
             if (response!==0) { //if no error when fetching database rows
-                auctions = response;
-                return auctions;
+                soldItems = response.data;
+                return soldItems;
             }
             else {
                 console.log("Error response from database");
@@ -49,7 +44,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
         }).then(function (response) {
             console.log("GOT SELLER AUCTIONS", response);
             if (response!==0) { //if no error when fetching database rows
-                auctions = response;
+                auctions = response.data;
                 return auctions;
             }
             else {
@@ -57,7 +52,28 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             }
         });
     };
-    
+
+    this.getDraftItems = function (userID) {
+        var auctions = null;
+        return request = $http({
+            method: "post",
+            url: "/scripts/php/selectRowBysql.php",
+            data: {
+                sql: "SELECT * FROM item WHERE ownerID="+ userID
+            },
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function (response) {
+            console.log("GOT SELLER DRAFTS", response.data);
+            if (response!==0) { //if no error when fetching database rows
+                auctions = response.data;
+                return auctions;
+            }
+            else {
+                console.log("Error response from database");
+            }
+        });
+    };
+
     //GET USER RATINGS
     this.getUserRatings = function (userID) {
         var ratings = null;
@@ -183,20 +199,28 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
     };
     
     //GET ALL LIVE AUCTIONS
-    this.getAllLiveAuctions = function () {
+    this.getAllLiveAuctions = function (categoryID) {
+        var auctions = null;
         return request = $http({
             method: "post",
-            url: "/scripts/php/selectRowsGeneric.php",
+            url: "/scripts/php/selectRowBySql.php",
             data: {
-                table:'auction',
-                where:'WHERE isActive=1'
+                sql: "SELECT auction.auctionID, item.itemID, auction.name, auction.description, auction.instantPrice, "+
+                "auction.isActive, auction.endDate, auction.currentBidID, bid.bidID, bid.bidderID, image.imageID, "+
+                "image.image, image.itemID, item.categoryID, item.conditionID, "+
+                "IFNULL((select max(bid.bidPrice) from bid WHERE bid.auctionID=auction.auctionID), auction.startingPrice) "+
+                "as auctionPrice "+
+                "FROM auction,item,bid,image "+
+                "WHERE auction.startDate < now() AND auction.endDate > now() AND auction.itemID = item.itemID AND item.categoryID="+categoryID+" AND auction.isActive=1 "+
+                "AND image.itemID=auction.itemID "+
+                "GROUP BY auction.auctionID;"
             },
             headers: { 'Content-Type': 'application/json' }
         }).then(function (response) {
             console.log("GOT LIVE AUCTIONS", response);
             if (response!==0) { //if no error when fetching database rows
-                items = response;
-                return items;
+                auctions = response.data;
+                return auctions;
             }
             else {
                 console.log("Error response from database");

@@ -14,7 +14,7 @@
                     </thead>
                     <tbody >
 
-                    <tr ng-repeat="i in data.items track by i.itemID">
+                    <tr ng-repeat="i in draftItems track by i.itemID">
                         <td>{{i.name}}</td>
                         <td>{{i.description}}</td>
                         <td>{{data.getCategoryOfItem(i)}}</td>

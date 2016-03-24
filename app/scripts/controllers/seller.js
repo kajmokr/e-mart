@@ -3,6 +3,42 @@
  ********************************************************************************************************************/
 emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $cookies,
                                           $timeout, toaster, authenticationService, dataService, $stateParams) {
+
+    // WATCHES STATE CHANGES AND MAKES THEM ACCESSIBLE
+    $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
+
+        switch ( to.name ){
+            case "seller.onsale": {
+                var itemPromise = dataService.getSellerAuctions($rootScope.user.userID);
+                itemPromise.then(function(result) {
+                    // TODO: THE dataService also need to return images of the products
+                    console.log(result);
+                    $scope.auctions = result;
+                });
+                break;
+            }
+            case "seller.draft" || "addauction": {
+                var draftPromise = dataService.getDraftItems($rootScope.user.userID);
+                draftPromise.then(function(result) {
+                    $scope.draftItems = result;
+                });
+                break;
+            }
+            case "seller.sold": {
+                var soldPromise = dataService.getSellerSoldItems($rootScope.user.userID);
+                soldPromise.then(function(result) {
+                    $scope.soldItems = result;
+                    console.log(result)
+                });
+                break;
+            }
+            case "seller.edititem": {
+
+            }
+
+        }
+
+    });
     
     // save categories and conditions on the $Scope
     $scope.categories = $rootScope.rootData.categories;
@@ -106,106 +142,82 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
     };
 
     //---------------------------------------------------------------
-    // GET ITEM METHODS
+    // ADD AUCTION
     //---------------------------------------------------------------
+    // function that adds days to date object
+    function addDays(theDate, days) {
+        return new Date(theDate.getTime() + days*24*60*60*1000);
+    }
     
-    console.log($rootScope.user.userID);
+    $scope.auctionItem = {
+        name: null,
+        description: null,
+        item: 2,
+        startdate: new Date(),
+        enddate: addDays(new Date(), 7),
+        startingprice: null,
+        reserveprice: null,
+        instantprice: null
+    };
 
-    // TODO: THE dataService also need to return images of the products
-    var itemPromise = dataService.getSellerAuctions($rootScope.user.userID);
-    itemPromise.then(function(result) {
-        $scope.auctions = result;
-    });
+    // CREATE AN AUCTION FROM A DRAFT ITEM
+    $scope.addAuction = function (auctionForm) {
+        if (auctionForm.$valid) {
+            console.log($scope.auctionItem);
 
+            var request = $http({
+                method: "post",
+                url: "/scripts/php/addauction.php",
+                data: {
+                    auctioneerid: $cookies.get('userID'),
+                    itemid: $scope.auctionItem.item,
+                    auctionname: $scope.auctionItem.name,
+                    description: $scope.auctionItem.description,
+                    startingprice: $scope.auctionItem.startingprice,
+                    reserveprice: $scope.auctionItem.reserveprice,
+                    instantprice: $scope.auctionItem.instantprice,
+                    startdate: $scope.auctionItem.startdate,
+                    enddate: $scope.auctionItem.enddate
+                },
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            });
 
-    // ----------------------------------------------------------------------------
-    // STUFF FROM ADD AUCTION
-    //Initial the start and end date fields
-    // var defaultAuctionLength = 7;
-    // $scope.data.today = new Date();
-    // $scope.data.startdate = $scope.data.today;
-    // $scope.data.futureDate = new Date();
-    // $scope.data.futureDate.setDate($scope.data.futureDate.getDate() + defaultAuctionLength);
-    // $scope.data.enddate =   $scope.data.futureDate;
-    //
-    //
-    // // //Get items of the current users
-    // // var sellerItemsPromise = dataService.getSellerItems($cookies.get('userID'));
-    // // sellerItemsPromise.then(function(result) {
-    // //     //inside promise then
-    // //     $scope.data.items = result.data;
-    // // });
-    //
-    // //get the item chosen
-    // $scope.data.addAuction = function () {
-    //     console.log($scope.data);
-    //     console.log($scope.data.startdate, $scope.data.enddate);
-    //     //Validation
-    //
-    //
-    //     if ($scope.data.auctionForm.name.$valid &&
-    //         $scope.data.auctionForm.description.$valid &&
-    //         $scope.data.auctionForm.startdate.$valid &&
-    //         $scope.data.auctionForm.enddate.$valid &&
-    //         $scope.data.auctionForm.startprice.$valid &&
-    //         $scope.data.auctionForm.reserveprice.$valid &&
-    //         $scope.data.auctionForm.instantprice.$valid
-    //     ) {
-    //         var request = $http({
-    //             method: "post",
-    //             url: "/scripts/php/addauction.php",
-    //             data: {
-    //                 auctioneerid: $cookies.get('userID'),
-    //                 itemid: $scope.data.item,
-    //                 auctionname: $scope.data.name,
-    //                 description: $scope.data.description,
-    //                 startingprice: $scope.data.startingprice,
-    //                 reserveprice: $scope.data.reserveprice,
-    //                 instantprice: $scope.data.instantprice,
-    //                 startdate: $scope.data.startdate,
-    //                 enddate: $scope.data.enddate
-    //
-    //             },
-    //             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    //         });
-    //
-    //         // Successful HTTP post request or not
-    //         request.success(function (data) {
-    //             console.log("Response: ", data);
-    //             if (data == 1) {
-    //                 $scope.data.responseMessage = "";
-    //                 $state.go('seller.onsale');
-    //                 toaster.pop({
-    //                     type: 'success',
-    //                     title: 'Auction added',
-    //                     body: 'Your auction has been added successfully!',
-    //                     showCloseButton: false,
-    //                     timeout: 2500
-    //                 });
-    //             }
-    //             else {
-    //                 toaster.pop({
-    //                     type: 'error',
-    //                     title: 'Error',
-    //                     body: 'Something went wrong.',
-    //                     showCloseButton: false,
-    //                     timeout: 2000
-    //                 });
-    //             }
-    //         });
-    //     }
-    //     else {
-    //         toaster.pop({
-    //             type: 'error',
-    //             title: 'Error',
-    //             body: 'Please fill out all fields before proceeding!',
-    //             showCloseButton: false,
-    //             timeout: 2000
-    //         });
-    //
-    //     }
-    //
-    // };
+            // Successful HTTP post request or not
+            request.success(function (data) {
+                console.log("Response: ", data);
+                if (data == 1) {
+                    $state.go('seller.onsale');
+                    toaster.pop({
+                        type: 'success',
+                        title: 'Auction added',
+                        body: 'Your auction has been added successfully!',
+                        showCloseButton: false,
+                        timeout: 2500
+                    });
+                }
+                else {
+                    toaster.pop({
+                        type: 'error',
+                        title: 'Error',
+                        body: 'Something went wrong.',
+                        showCloseButton: false,
+                        timeout: 2000
+                    });
+                }
+            });
+        }
+        else {
+            toaster.pop({
+                type: 'error',
+                title: 'Error',
+                body: 'Please fill out all fields before proceeding!',
+                showCloseButton: false,
+                timeout: 2000
+            });
+
+        }
+
+    };
 
     // ----------------------------------------------------------------------------
     // // STUFF FROM AUCTION LIST
@@ -218,15 +230,15 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
     // //         method: "post",
     // //         url: "/scripts/php/selectRowBysql.php",
     // //         data: {
-    // //             sql: "SELECT auction.auctionID, item.itemID, auction.name, auction.description, auction.instantPrice, "+
-    // //             "auction.isActive, auction.endDate, auction.currentBidID, bid.bidID, bid.bidderID, image.imageID, "+
-    // //             "image.image, image.itemID, item.categoryID, item.conditionID, "+
-    // //             "IFNULL((select max(bid.bidPrice) from bid WHERE bid.auctionID=auction.auctionID), auction.startingPrice) "+
-    // //             "as auctionPrice "+
-    // //             "FROM auction,item,bid,image "+
-    // //             "WHERE auction.startDate < now() AND auction.endDate > now() AND auction.itemID = item.itemID AND item.categoryID="+$scope.data.categoryID+" AND auction.isActive=1 "+
-    // //             "AND image.itemID=auction.itemID "+
-    // //             "GROUP BY auction.auctionID;"
+    //             sql: "SELECT auction.auctionID, item.itemID, auction.name, auction.description, auction.instantPrice, "+
+    //             "auction.isActive, auction.endDate, auction.currentBidID, bid.bidID, bid.bidderID, image.imageID, "+
+    //             "image.image, image.itemID, item.categoryID, item.conditionID, "+
+    //             "IFNULL((select max(bid.bidPrice) from bid WHERE bid.auctionID=auction.auctionID), auction.startingPrice) "+
+    //             "as auctionPrice "+
+    //             "FROM auction,item,bid,image "+
+    //             "WHERE auction.startDate < now() AND auction.endDate > now() AND auction.itemID = item.itemID AND item.categoryID="+$scope.data.categoryID+" AND auction.isActive=1 "+
+    //             "AND image.itemID=auction.itemID "+
+    //             "GROUP BY auction.auctionID;"
     // //         },
     // //         headers: {'Content-Type': 'application/json'}
     // //     }).then(function (response) {

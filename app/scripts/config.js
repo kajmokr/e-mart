@@ -86,24 +86,22 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         //-----------------------------------------------------
         .state('buyer', {
             templateUrl: "views/common/content.html",
+            resolve: { authenticate: authenticate },
             data: { mainState: 'buyer.bids', mainStateName: 'My Bids', name: 'Buyer Dashboard' }
         })
         .state('buyer.mybids', {
             url: "/bybids",
             templateUrl: "views/buyer/mybids.html",
-            // controller: "BuyerDashboardCtrl",
             data: { pageTitle: 'Buyer Dashboard | My Bids' }
         })
         .state('buyer.boughtItems', {
             url: "/bought-items",
             templateUrl: "views/buyer/boughtItems.html",
-            // controller: "boughtItemsCtrl",
             data: { pageTitle: 'Buyer Dashboard | Bought Items', subStateName: "Bought Items" }
         })
         .state('buyer.bookmarks', {
             url: "/bookmarks",
             templateUrl: "views/buyer/bookmarks.html",
-            // controller: "bookmarkCtrl",
             data: { pageTitle: 'Buyer Dashboard | Bookmarks', subStateName: "Bookmarks" }
         })
         .state('buyer.createbid', {
@@ -119,6 +117,7 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         .state('seller', {
             templateUrl: "views/common/content.html",
             controller: "sellerCtrl",
+            resolve: { authenticate: authenticate },
             data: { mainState: 'seller.onsale', mainStateName: 'On Sale', name: 'Seller Dashboard', toggleView: false }
         })
         .state('seller.additem', {
@@ -149,11 +148,10 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             },
             data: { pageTitle: 'Seller Dashboard | Edit Item', subStateName: 'Edit Item' }
         })
-        .state('addauction', {
-            parent: "root",
+        .state('seller.addauction', {
             url:"/addauction",
             templateUrl: "views/seller/addauction.html",
-            data: {pageTitle: "Create Auction"}
+            data: {pageTitle: "Seller Dashboard | Create Auction"}
         })
             
         //-----------------------------------------------------
@@ -162,31 +160,27 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         .state('ecommerce', {
             templateUrl: "views/common/content.html",
             controller: "ecommerceCtrl",
+            params: { categoryid: null , itemid: null, auctionid: null, bidid: null, other: null},
             resolve: { authenticate: authenticate },
             data: { mainState: 'ecommerce.grid', mainStateName: 'Browsing', name: 'Browsing Auctions', toggleView: true }
         })
         .state('ecommerce.grid', {
-            url:"/ecommerce?:categoryid",
-            param:{ categoryid: null },
+            url:"/ecommerce",
             templateUrl: "views/ecommerce/products_grid.html",
             data: { pageTitle: 'Browsing Auctions | By Category', subStateName: 'By Category' }
         })
         .state('ecommerce.list', {
-            url: "/ecommerce-list?:categoryid",
-            param:{ categoryid: null },
+            url: "/ecommerce-list",
             templateUrl: "views/ecommerce/products_list.html",
             data: { pageTitle: 'E-commerce | Product List', subStateName: 'Product List' }
         })
         .state('ecommerce.details', {
             url: "/ecommerce-details",
-            params: { itemid: null, auctionid: null},
-            // controller: "productDetailsCtrl",
             templateUrl: "views/ecommerce/ecommerce_product_details.html",
             data: { pageTitle: 'Browsing Auctions | Auction Details', subStateName: 'Auction Details' }
         })
         .state('ecommerce.bidhistory', {
-            url: "/bidhistory?:id&{other}",
-            param:{ id: null, other: null },
+            url: "/bidhistory",
             templateUrl: "views/ecommerce/bidhistory.html",
             data: { pageTitle: 'View Bid' }
         })

@@ -16,17 +16,17 @@
                 </thead>
                 <tbody >
 
-                <tr ng-repeat="a in data.soldItems track by $index">
-                    <td>{{a[1]}}</td>
-                    <td>{{a.description}}</td>
-                    <td>{{a[5]}}</td>
-                    <td>£ {{a.bidPrice}}</td>
-                    <td>{{a.firstName}}</td>
+                <tr ng-repeat="item in soldItems track by $index">
+                    <td>{{item[1]}}</td>
+                    <td>{{item.description}}</td>
+                    <td>{{item[5]}}</td>
+                    <td>£ {{item.bidPrice}}</td>
+                    <td>{{item.firstName}}</td>
                     <td>
-                        <button class="btn btn-warning" ng-click="data.goToURL(a.emailAddress, a[1])"><i class="fa fa-envelope"></i></button>
+                        <button class="btn btn-warning" ng-click="goToURL(item.emailAddress, a[1])"><i class="fa fa-envelope"></i></button>
                     </td>
                     <td>
-                        <button class="btn btn-primary" data-ui-sref="ecommerce.details({auctionid:{{a.auctionID}}})"><i class="fa fa-eye"></i></button>
+                        <button class="btn btn-primary" data-ui-sref="ecommerce.details({auctionid:{{item.auctionID}}})"><i class="fa fa-eye"></i></button>
                     </td>
                 </tr>
                 </tbody>
