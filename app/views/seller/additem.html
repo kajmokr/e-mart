@@ -1,4 +1,3 @@
-
 <div class="col-lg-12">
     <div  class="tabs-container">
         <tabset>
@@ -7,15 +6,15 @@
                     Item information
                 </tab-heading>
                 <div  class="panel-body">
-                    <form class="m-t" name="data.itemForm" novalidate>
+                    <form class="m-t" name="itemForm" novalidate>
                     <fieldset class="form-horizontal">
                         <!--ITEM NAME -->
                         <div class="form-group"
-                             data-ng-class="{'has-success': data.itemForm.name.$valid, 'has-error': data.itemForm.name.$invalid && data.itemForm.name.$dirty}">
-
+                             data-ng-class="{'has-success': itemForm.name.$valid, 'has-error': itemForm.name.$invalid && itemForm.name.$dirty}">
                             <label class="col-sm-2 control-label">Name:</label>
                             <div class="col-sm-10">
-                                <input name="name" type="text" data-ng-model="data.name"
+                                <input name="name" type="text"
+                                       data-ng-model="item.name"
                                        data-ng-minlength="3"
                                        data-ng-maxlength="20"
                                        data-ng-trim="true"
@@ -26,36 +25,37 @@
                             <div class="col-sm-2">
                             </div>
                             <div class="col-sm-10">
-                                <p data-ng-show="data.itemForm.name.$invalid && data.itemForm.name.$dirty" class="help-block m-b-none has-error">Name not long enough.</p>
+                                <p data-ng-show="itemForm.name.$invalid && itemForm.name.$dirty" class="help-block m-b-none has-error">Name not long enough.</p>
                             </div>
-
                         </div>
+
                         <!--ITEM CATEGORY-->
                         <div class="form-group"
-                             data-ng-class="{'has-success': data.itemForm.category.$valid, 'has-error': data.itemForm.category.$invalid && data.itemForm.category.$dirty}">
+                             data-ng-class="{'has-success': itemForm.category.$valid, 'has-error': itemForm.category.$invalid && itemForm.category.$dirty}">
                             <label class="col-sm-2 control-label">Category :</label>
                             <div class="col-sm-10">
-                                <select name="category" class="form-control"  data-ng-model="data.category"
+                                <select name="category" class="form-control"
+                                        data-ng-model="item.category"
                                         data-ng-minlength="1"
                                         data-ng-required="true">
                                     <!--PULL CATEGORIES FROM DATABASE -->
-                                    <option  ng-repeat="cat in data.categories track by cat.categoryID" value="{{cat.categoryID}}">{{cat.name}}</option>
+                                    <option  ng-repeat="cat in categories track by cat.categoryID" value="{{cat.categoryID}}">{{cat.name}}</option>
                                 </select>
                             </div>
                             <!--VALIDATION -->
                             <div class="col-sm-2"></div>
                             <div class="col-sm-10">
-                                <p data-ng-show="data.itemForm.category.$invalid && data.itemForm.category.$dirty" class="help-block m-b-none has-error">Choose a category</p>
+                                <p data-ng-show="itemForm.category.$invalid && itemForm.category.$dirty" class="help-block m-b-none has-error">Choose a category</p>
                             </div>
                         </div>
 
                         <!--ITEM DESCRIPTION -->
                         <div class="form-group"
-                             data-ng-class="{'has-success': data.itemForm.description.$valid, 'has-error': data.itemForm.description.$invalid && data.itemForm.description.$dirty}">
+                             data-ng-class="{'has-success': itemForm.description.$valid, 'has-error': itemForm.description.$invalid && itemForm.description.$dirty}">
 
                         <label class="col-sm-2 control-label">Description:</label>
                             <div class="col-sm-10">
-                                <textarea name="description" rows="5" data-ng-model="data.description" class="form-control"
+                                <textarea name="description" rows="5" data-ng-model="item.description" class="form-control"
                                           data-ng-minlength="3"
                                           data-ng-maxlength="1000"
                                           data-ng-trim="true"
@@ -67,25 +67,26 @@
                             <!--VALIDATION -->
                             <div class="col-sm-2"></div>
                             <div class="col-sm-10">
-                                <p data-ng-show="data.itemForm.description.$invalid && data.itemForm.description.$dirty" class="help-block m-b-none has-error">Description must be more than 3 and less than 1000 chars.</p>
+                                <p data-ng-show="itemForm.description.$invalid && itemForm.description.$dirty" class="help-block m-b-none has-error">Description must be more than 3 and less than 1000 chars.</p>
                             </div>
                         </div>
+
                         <!--ITEM CONDITION-->
                         <div class="form-group"
-                             data-ng-class="{'has-success': data.itemForm.condition.$valid, 'has-error': data.itemForm.condition.$invalid && data.itemForm.condition.$dirty}">
+                             data-ng-class="{'has-success': itemForm.condition.$valid, 'has-error': itemForm.condition.$invalid && itemForm.condition.$dirty}">
                             <label class="col-sm-2 control-label">Condition :</label>
                             <div class="col-sm-10">
-                                <select name="condition" class="form-control"  data-ng-model="data.condition"
+                                <select name="condition" class="form-control"  data-ng-model="item.condition"
                                         data-ng-minlength="1"
                                         data-ng-required="true">
                                     <!--PULL CONDITIONS FROM DATABASE -->
-                                    <option ng-repeat="c in data.conditions track by c.conditionID" value="{{c.conditionID}}">{{c.name}}</option>
+                                    <option ng-repeat="c in conditions track by c.conditionID" value="{{c.conditionID}}">{{c.name}}</option>
                                 </select>
                             </div>
                             <!--VALIDATION -->
                             <div class="col-sm-2"></div>
                             <div class="col-sm-10">
-                                <p data-ng-show="data.itemForm.condition.$invalid && data.itemForm.condition.$dirty" class="help-block m-b-none has-error">Select item condition</p>
+                                <p data-ng-show="itemForm.condition.$invalid && itemForm.condition.$dirty" class="help-block m-b-none has-error">Select item condition</p>
                             </div>
                         </div>
 
@@ -101,15 +102,10 @@
                                 -->
                                 <div class="row">
                                     <div ng-show="imageStrings.length>0" class="ibox-content">
-                                        <carousel interval="data.slideInterval">
+                                        <carousel interval="slideInterval">
                                             <slide ng-repeat="image in uploader.flow.files track by $index">
                                                 <img class="preview" flow-img="image" style="margin:auto;">
                                             </slide>
-                                            <!--
-                                            <slide ng-repeat="image in imageStrings track by $index">
-                                                <img class="preview" ng-src="{{imageStrings[$index]}}" style="margin:auto;">
-                                            </slide>
-                                            -->
                                         </carousel>
                                     </div>
                                 </div>
@@ -122,7 +118,7 @@
                                 <button class="btn btn-block btn-danger" data-ui-sref="seller.draft">Cancel</button>
                             </div>
                             <div class="col-xs-5">
-                                <button class="btn btn-block btn-primary" data-ng-disabled="blobs.length<1" ng-click="data.addItem()">Add Item</button>
+                                <button class="btn btn-block btn-primary" data-ng-disabled="blobs.length<1" data-ng-click="addItem(itemForm)">Add Item</button>
                             </div>
                         </div>
                     </fieldset>

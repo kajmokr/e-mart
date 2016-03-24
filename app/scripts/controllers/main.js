@@ -2,20 +2,31 @@
  * MAIN CONTROLLER
  ********************************************************************************************************************/
 emart.controller('mainCtrl', function ($rootScope, $scope, $http, $state, $cookies, $timeout, toaster, authenticationService, dataService) {
-
-    // ----------------------------------------------------------------
-    // TOP NAVBAR CONTROLLER
-    //Search service
-    console.log($state.current.name);
-
-    $scope.data.navSearch = function () {
-        $state.go('search');
-        searchService.setSearchTerm($scope.data.navSearchTerm);
-    };
-    // ----------------------------------------------------------------
-    
     
     $rootScope.rootData = {};
+    $scope.searchTerm = "";
+
+    // WATCHES STATE CHANGES AND MAKES THEM ACCESSIBLE
+    $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
+        $rootScope.previousState = from.name;
+        $rootScope.currentState = to.name;
+    });
+    
+    // SEARCH BAR FUNCTION
+    $scope.search = function (searchTerm) {
+        // get the search results from the dataService
+        var searchPromise = dataService.searchAuctions(searchTerm);
+        searchPromise.then(function(result){
+            $state.go('search');
+            
+            // when searchTerm is empty go to previous state 
+            if ( searchTerm == ""){
+                $state.go($rootScope.previousState);
+            }
+            $scope.searchResults = result.data;
+            $scope.searchTerm = searchTerm;
+        });
+    };
     
     //LOGOUT FUNCTION
     $rootScope.logout = function () {
@@ -28,24 +39,7 @@ emart.controller('mainCtrl', function ($rootScope, $scope, $http, $state, $cooki
         $rootScope.rootData.categories = result.categories;
         $rootScope.rootData.conditions = result.conditions;
     });
-
-
-    // TODO: WHAT IS THIS FOR?
-    //START EMAILING SERVICE
-    (function () {
-        return request = $http({
-            method: "post",
-            url: "/scripts/php/auctionCtrl.php",
-            headers: {'Content-Type': 'application/json'}
-        }).then(function (response) {
-            console.log(response);
-            if (response !== 0) { //if no error when fetching database rows
-                console.log(response);
-            }
-            else {
-                console.log("Error");
-            }
-        });
-    })();
+    
+    dataService.mailingService();
     
 });

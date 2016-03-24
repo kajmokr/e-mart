@@ -118,13 +118,12 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         //-----------------------------------------------------
         .state('seller', {
             templateUrl: "views/common/content.html",
-            controller: "sellerDashboardCtrl",
+            controller: "sellerCtrl",
             data: { mainState: 'seller.onsale', mainStateName: 'On Sale', name: 'Seller Dashboard', toggleView: false }
         })
         .state('seller.additem', {
             url:"/additem",
             templateUrl: "views/seller/additem.html",
-            controller: 'addItemCtrl',
             data: { pageTitle: 'Seller Dashboard | Add Item', subStateName: 'Add Item', toggleView: false }
         })
         .state('seller.draft', {
@@ -225,7 +224,6 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             parent: "root",
             url:"/search",
             templateUrl: "views/other/search.html",
-            controller: "searchCtrl",
             resolve: { authenticate: authenticate },
             data: { pageTitle: 'Search Results', name: 'Search Results', hide: true }
         })

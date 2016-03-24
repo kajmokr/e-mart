@@ -2,9 +2,9 @@
     <div class="ibox float-e-margins">
         <div class="ibox-content">
             <h2>
-                {{data.srLength}} results found for: <span class="text-navy">{{ data.searchterm }}</span>
+                {{searchResults.length}} results found for: <span class="text-navy">{{searchTerm}}</span>
             </h2>
-            <div ng-repeat="result in data.searchResults">
+            <div ng-repeat="result in searchResults">
                 <div class="hr-line-dashed"></div>
                 <div class="search-result">
                     <div class="row">

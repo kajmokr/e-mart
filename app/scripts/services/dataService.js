@@ -268,8 +268,52 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             }
 
         })
-    }
+    };
+    
+    this.searchAuctions = function (searchTerm) {
 
+        var searchResults = {};
+        return request = $http({
+            method: "post",
+            url: "/scripts/php/selectRowBysql.php",
+            data: {
+                sql: "SELECT auction.auctionID, auction.name, auction.description, auction.startingPrice, " +
+                "bid.bidPrice, bid.auctionID, " +
+                "IFNULL((select max(bid.bidPrice) from bid WHERE bid.auctionID=auction.auctionID), " +
+                "auction.startingPrice) as auctionPrice " +
+                "FROM auction,bid WHERE (name LIKE '%" + searchTerm + "%' " +
+                " OR description LIKE '%" + searchTerm + "%') GROUP BY auction.auctionID"
+            },
+            headers: {'Content-Type': 'application/json'}
+        }).then(function (response) {
+            if (response !== 0) { //if no error when fetching database rows
+                searchResults = response;
+                return searchResults;
+            }
+            else {
+                console.log("Error response from database");
+            }
+        });
+
+    }
     
-    
+    //START EMAILING SERVICE
+    this.mailingService = function () {
+        return request = $http({
+            method: "post",
+            url: "/scripts/php/auctionCtrl.php",
+            headers: {'Content-Type': 'application/json'}
+        }).then(function (response) {
+            console.log(response);
+            if (response !== 0) { //if no error when fetching database rows
+                console.log(response, "Mailing service started");
+            }
+            else {
+                console.log("Error");
+            }
+        });
+    };
+
+        
+        
 });
