@@ -20,7 +20,7 @@
                 </thead>
                 <tbody >
 
-                <tr ng-repeat="auction in data.auctions track by auction.auctionID">
+                <tr ng-repeat="auction in auctions track by $index">
                     <td>{{auction[1]}}</td>
                     <td>{{auction[10]}}</td>
                     <td>{{auction[4]}}</td>
@@ -49,7 +49,3 @@
         </div>
     </div>
 </div>
-
-<!--<div class="col-lg-12">-->
-<!--<button class="btn btn-primary btn-block"><i class="fa fa-arrow-down"></i> Show More</button>-->
-<!--</div>-->

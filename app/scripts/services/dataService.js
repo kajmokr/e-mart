@@ -182,16 +182,6 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
         });
     };
     
-    //GET THE CONDITION BY ID
-    this.getConditionbyID = function (conditionID) {
-        if (dataServiceScope.conditions!=null) {
-            dataServiceScope.conditions.forEach (function (condition) {
-                if (condition.conditionID==conditionID) return condition;
-            })
-        }
-        return null;
-    };
-    
     //GET ALL LIVE AUCTIONS
     this.getAllLiveAuctions = function () {
         return request = $http({

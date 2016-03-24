@@ -13,6 +13,7 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
     $scope.imagesSaved = false;
     $scope.imageStrings = [];
     $scope.item = {};
+    $scope.auction = {};
 
     //---------------------------------------------------------------
     // ADD ITEM METHODS
@@ -105,8 +106,16 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
     };
 
     //---------------------------------------------------------------
-    // 
+    // GET ITEM METHODS
     //---------------------------------------------------------------
+    
+    console.log($rootScope.user.userID);
+
+    // TODO: THE dataService also need to return images of the products
+    var itemPromise = dataService.getSellerAuctions($rootScope.user.userID);
+    itemPromise.then(function(result) {
+        $scope.auctions = result;
+    });
 
 
     // ----------------------------------------------------------------------------
