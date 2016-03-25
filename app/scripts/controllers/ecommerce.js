@@ -90,15 +90,6 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     $scope.isActive = function (status) {
         return status==1?true:false;
     }
-
-    //
-    // // $scope.data.getCategoryOfItem = function (item) {
-    // //     return dataService.hashedCategories[item.categoryID].name;
-    // // };
-    // //
-    // // $scope.data.getConditionOfItem = function (item) {
-    // //     return dataService.hashedConditions[item.conditionID].name;
-    // // };
     // //
     // // $scope.data.getItemNamebyID = function (itemID) {
     // //     return $scope.data.hashedItems[itemID].name;

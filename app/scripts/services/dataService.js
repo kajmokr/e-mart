@@ -30,7 +30,6 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
         });
     };
 
-    // TODO: RETURN IMAGE IN QUERY AS WELL
     //GET ITEMS ON SALE FOR THE SELLER
     this.getSellerAuctions = function (auctioneerID) {
         var auctions = null;

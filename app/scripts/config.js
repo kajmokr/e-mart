@@ -142,13 +142,13 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             data: { pageTitle: 'Seller Dashboard | Items Sold', subStateName: 'Items Sold' }
         })
         .state('seller.edititem', {
-            url:"/edititem?:itemid",
+            url:"/edititem",
             controller: "editItemCtrl",
-            templateUrl: function (param){
-                return "views/seller/edititem.html?itemid="+param.id;
-            },
+            params: {itemid: null},
+            templateUrl: "views/seller/edititem.html",
             data: { pageTitle: 'Seller Dashboard | Edit Item', subStateName: 'Edit Item' }
         })
+
         .state('seller.addauction', {
             url:"/addauction",
             templateUrl: "views/seller/addauction.html",
