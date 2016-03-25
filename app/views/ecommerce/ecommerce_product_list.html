@@ -16,7 +16,7 @@
                 </thead>
                 <tbody>
                         <tr ng-repeat="(key,auction) in auctions track by $index">
-                            <td>{{auction.name}}</td>
+                            <td><a data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}} })">{{auction.name}}</a></td>
                             <td>£{{auction.bidPrice}}</td>
                             <td>£{{auction.instantPrice}}</td>
                             <td>{{auction.endDate}}</td>

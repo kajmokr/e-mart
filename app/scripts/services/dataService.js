@@ -230,7 +230,31 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             }
         });
     };
-    
+
+    this.getSingleAuction = function (auctionID) {
+        var auction = null;
+        return request = $http({
+            method: "post",
+            url: "/scripts/php/selectRowBySql.php",
+            data: {
+                sql:    "SELECT * " +
+                        "FROM item, auction "+
+                        "WHERE item.itemID=auction.itemID AND auction.auctionID="+ auctionID
+            },
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function (response) {
+            console.log("GOT LIVE AUCTIONS", response);
+            if (response!==0) { //if no error when fetching database rows
+                auction = response.data[0];
+                return auction;
+            }
+            else {
+                console.log("Error response from database");
+            }
+        });
+    };
+
+
     //GET IMAGES FOR AN ITEM
     this.getItemImage = function(itemID) {
 
