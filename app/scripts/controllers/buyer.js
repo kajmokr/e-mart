@@ -3,10 +3,8 @@
  ********************************************************************************************************************/
 emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cookies,
                                           $timeout, toaster, authenticationService, dataService, $stateParams) {
-
         // ----------------------------------------------------------------------------
         // MY BIDS
-
         $scope.data = {}; //creating new scope that can be used inside tabset
         $scope.data.getItemNamebyID = function (itemID) {
             return $scope.data.hashedItems[itemID].name;
@@ -43,8 +41,6 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
 
 .controller('createBidCtrl', function ($rootScope, $scope, $http, $state, $cookies,
                                         $timeout, toaster, authenticationService, dataService, $stateParams) {
-
-    console.log("INSIDE CREATE BID CONTROLLER", $stateParams);
     $scope.auctionname = $stateParams.other;
     $scope.newBid = {
         bidPrice: null
@@ -59,8 +55,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
                     "IFNULL((select max(bid.bidPrice) from bid WHERE bid.auctionID="+$stateParams.id+
                     "), auction.startingPrice) as minBidPrice FROM bid,auction WHERE auction.auctionID="+
                      $stateParams.id+" GROUP BY auction.auctionID;"
-                //sql: "select bidPrice, bidderID from bid where bidPrice = (select max(bidPrice) from bid WHERE auctionID=" + $stateParams.id + ")"
-            },
+              },
             headers: {'Content-Type': 'application/json'}
         }).then(function (response) {
             console.log(response);
@@ -199,55 +194,55 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
 
 })
 
-//GET BOOKMARKS AND REMOVE BOOKMARKS
-.controller('bookmarkCtrl', function ($scope, $http, $state, $cookies, toaster, dataService) {
-    (function () {
-        return request = $http({
-            method: "post",
-            url: "/scripts/php/bookmarklist.php",
-            data: {
-                userID: $cookies.get('userID')
-            },
-            headers: {'Content-Type': 'application/json'}
-        }).then(function (response) {
-            console.log(response);
-            if (response !== 0) { //if no error when fetching database rows
+    //GET BOOKMARKS AND REMOVE BOOKMARKS
+    .controller('bookmarkCtrl', function ($scope, $http, $state, $cookies, toaster, dataService) {
+        (function () {
+            return request = $http({
+                method: "post",
+                url: "/scripts/php/bookmarklist.php",
+                data: {
+                    userID: $cookies.get('userID')
+                },
+                headers: {'Content-Type': 'application/json'}
+            }).then(function (response) {
                 console.log(response);
-                $scope.bookmarks = response.data;
-            }
-            else {
-                console.log("Error loading drop down menu conditions and categories from database");
-            }
-        });
-    })();
+                if (response !== 0) { //if no error when fetching database rows
+                    console.log(response);
+                    $scope.bookmarks = response.data;
+                }
+                else {
+                    console.log("Error loading drop down menu conditions and categories from database");
+                }
+            });
+        })();
 
-    $scope.removeBookmark = function (auctionID) {
-        return request = $http({
-            method: "post",
-            url: "/scripts/php/removebookmark.php",
-            data: {
-                auctionID: auctionID,
-                userID: $cookies.get('userID')
-            },
-            headers: {'Content-Type': 'application/json'}
-        }).then(function (response) {
-            if (response !== 0) { //if no error when fetching database rows
-                toaster.pop({
-                    type: 'success',
-                    title: 'SUCCESS',
-                    body: 'Bookmark removed!',
-                    showCloseButton: false,
-                    timeout: 2500
-                })
-                $state.reload();
-            }
-            else {
-                console.log("Error loading drop down menu conditions and categories from database");
-            }
+        $scope.removeBookmark = function (auctionID) {
+            return request = $http({
+                method: "post",
+                url: "/scripts/php/removebookmark.php",
+                data: {
+                    auctionID: auctionID,
+                    userID: $cookies.get('userID')
+                },
+                headers: {'Content-Type': 'application/json'}
+            }).then(function (response) {
+                if (response !== 0) { //if no error when fetching database rows
+                    toaster.pop({
+                        type: 'success',
+                        title: 'SUCCESS',
+                        body: 'Bookmark removed!',
+                        showCloseButton: false,
+                        timeout: 2500
+                    })
+                    $state.reload();
+                }
+                else {
+                    console.log("Error loading drop down menu conditions and categories from database");
+                }
 
-        })
-    }
-})
+            })
+        }
+    })
 
     .controller('boughtItemsCtrl', function ($scope, $http, $state, $cookies, toaster, dataService) {
         console.log("Inside bought items ctrl");

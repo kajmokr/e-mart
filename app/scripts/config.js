@@ -163,7 +163,7 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         .state('ecommerce', {
             templateUrl: "views/common/content.html",
             controller: "ecommerceCtrl",
-            params: { categoryid: null , itemid: null, auctionid: null, bidid: null, other: null},
+            params: { categoryid: null , itemid: null, auctionid: null, bidid: null, bidhistoryauctionid:null, other: null},
             resolve: { authenticate: authenticate },
             data: { mainState: 'ecommerce.grid', mainStateName: 'Browsing', name: 'Browsing Auctions', toggleView: true }
         })
@@ -184,6 +184,7 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         })
         .state('ecommerce.bidhistory', {
             url: "/bidhistory",
+            //params: {auctionid: null},
             templateUrl: "views/ecommerce/bidhistory.html",
             data: { pageTitle: 'View Bid' }
         })
