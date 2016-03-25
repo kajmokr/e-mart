@@ -271,6 +271,7 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
     $scope.editItemImagesSaved = false;
     $scope.editItemImageStrings = [];
     $scope.editItemUpdatedImageStrings = [];
+    $scope.editItem = {};
 
     //EDIT ITEM METHODS
     //Set the current item values
@@ -289,9 +290,9 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
         reqItem.success(function (data) {
             if (data) {
                 console.log("Item returned", data);
-                var currentItem = $scope.edititemcategory = $scope.edititemcondition = data[0];
-                $scope.edititemname = currentItem.name;
-                $scope.edititemdescription = currentItem.description;
+                var currentItem = $scope.editItem.itemcategory = $scope.editItem.itemcondition = data[0];
+                $scope.editItem.itemname = currentItem.name;
+                $scope.editItem.itemdescription = currentItem.description;
             }
         });
 
@@ -337,14 +338,14 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
         //EDIT ITEM
         $scope.editItem = function () {
             console.log("Inside edit item method...");
-            console.log($scope.edititemname,$scope.edititemdescription, $scope.edititemcategory, $scope.edititemcondition);
+            console.log($scope.editItem.itemcondition.conditionID);
             var request = $http({
                 method: "post",
                 url: "/scripts/php/editRowsBySQL.php",
                 data: {
                     sql: "UPDATE item SET name='"
-                    +$scope.edititemname+"',description='"+$scope.edititemdescription+"',categoryID='"
-                    +$scope.edititemcategory.categoryID+"', conditionID='"+$scope.edititemcondition.conditionID
+                    +$scope.editItem.itemname+"',description='"+$scope.editItem.itemdescription+"',categoryID='"
+                    +$scope.editItem.itemcategory.categoryID+"', conditionID='"+$scope.editItem.itemcondition.conditionID
                     +"' WHERE itemID='"+$stateParams.itemid+"'"
                 },
                 headers: { 'Content-Type': 'application/json' }
@@ -379,7 +380,7 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
                             insertImages.success(function (data) {
                                 console.log("Image insertion response from database", data);
                                 if (data == 1) {
-                                    $state.go('seller.draft');
+                                    $state.go('seller.draft', {}, { reload: true });
                                 }
                             });
                         }
