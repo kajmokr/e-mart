@@ -20,7 +20,14 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
         }
         else{ $state.go("ecommerce.grid"); }
     };
-    
+
+    $scope.getCategoryName = function (categoryID) {
+         return $rootScope.rootData.hashedCategories[categoryID].name;
+    };
+
+    $scope.getConditionName = function (conditionID) {
+         return $rootScope.rootData.hashedConditions[conditionID].name;
+    };
     
     // //CONTACT BUYER / SELLER
     // $scope.goToURL = function (email, subject) {
@@ -184,13 +191,9 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     //     });
     // })();
     //
-    // $scope.data.getCategoryName = function (categoryID) {
-    //     return dataService.hashedCategories[categoryID].name;
-    // };
+
     //
-    // $scope.data.getConditionName = function (conditionID) {
-    //     return dataService.hashedConditions[conditionID].name;
-    // };
+
     //
     // // ----------------------------------------------------------------------------
     // // STUFF FROM BID HISTORY

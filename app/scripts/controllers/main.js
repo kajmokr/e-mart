@@ -38,8 +38,10 @@ emart.controller('mainCtrl', function ($rootScope, $state, $scope, $http, $cooki
     myDataPromise.then(function(result) {
         $rootScope.rootData.categories = result.categories;
         $rootScope.rootData.conditions = result.conditions;
+        $rootScope.rootData.hashedCategories = result.hashedCategories;
+        $rootScope.rootData.hashedConditions = result.hashedConditions;
     });
-    
+
     dataService.mailingService();
     
 });

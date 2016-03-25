@@ -14,7 +14,7 @@
                             £{{auction.auctionPrice}}
                         </span>
 
-                <a class="text-muted" data-ui-sref="ecommerce.grid({categoryid:{{auction.categoryID}}})">{{data.getCategoryName(auction.categoryID)}}</a>
+                <a class="text-muted" data-ui-sref="ecommerce.grid({categoryid:{{auction.categoryID}}})">{{getCategoryName(auction.categoryID)}}</a>
                 <a class="product-name" data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}}})">{{auction.name}}</a>
                 <small class="label label-warning"> {{getConditionName(auction.conditionID)}}</small>
 

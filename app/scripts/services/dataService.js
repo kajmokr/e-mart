@@ -184,11 +184,15 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             if (response!==0) { //if no error when fetching database rows
                 data.categories = response.data.category;
                 data.conditions = response.data.itemcondition;
+
                 this.categories = response.data.category;
                 this.conditions = response.data.itemcondition;
                 //hash  conditions by conditions Id dataServiceScope.conditions, and same for categories
                 this.hashedCategories = generateHashTable(this.categories, "categoryID");
                 this.hashedConditions = generateHashTable(this.conditions, "conditionID");
+                data.hashedCategories = this.hashedCategories;
+                data.hashedConditions = this.hashedConditions;
+
                 //console.log(dataServiceScope.hashedConditions, dataServiceScope.hashedCategories);
                 return data;
             }
@@ -200,23 +204,21 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
     
     //GET ALL LIVE AUCTIONS
     this.getAllLiveAuctions = function (categoryID) {
+        console.log("Cat ID",categoryID);
         var auctions = null;
         return request = $http({
             method: "post",
             url: "/scripts/php/selectRowBySql.php",
             data: {
-                sql:    "SELECT * " +
-                        "FROM auction, item " +
-                        "WHERE item.itemID=auction.itemID AND item.categoryID="+ categoryID
-                // sql: "SELECT * FROM auction IFNULL ((select max(bid.bidPrice) from bid where bid.auctionID=auction."
-                // sql: "SELECT auction.name, auction.description, auction.auctionID, auction.instantPrice, auction.isActive, auction.endDate, auction.currentBidID, auction.startingPrice, "+
-                //             "item.itemID, item.categoryID, item.conditionID, "+
-                //             "bid.bidID, bid.bidderID, " +
-                //             "image.imageID, image.image, image.itemID "+
-                //     "FROM auction,item,bid,image "+
-                //     "WHERE auction.endDate > now() AND auction.itemID = item.itemID AND item.categoryID="+categoryID+" AND auction.isActive=1 "+
-                //     "AND image.itemID=auction.itemID "+
-                //     "GROUP BY auction.auctionID;"
+                sql: "SELECT auction.auctionID, item.itemID, auction.name, auction.description, auction.instantPrice, "+
+                "auction.isActive, auction.endDate, auction.currentBidID, bid.bidID, bid.bidderID, image.imageID, "+
+                "image.image, image.itemID, item.categoryID, item.conditionID, "+
+                "IFNULL((select max(bid.bidPrice) from bid WHERE bid.auctionID=auction.auctionID), auction.startingPrice) "+
+                "as auctionPrice "+
+                "FROM auction,item,bid,image "+
+                "WHERE auction.startDate < now() AND auction.endDate > now() AND auction.itemID = item.itemID AND item.categoryID="+categoryID+" AND auction.isActive=1 "+
+                "AND image.itemID=auction.itemID "+
+                "GROUP BY auction.auctionID;"
             },
             headers: { 'Content-Type': 'application/json' }
         }).then(function (response) {
