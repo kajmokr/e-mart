@@ -91,6 +91,7 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         })
         .state('buyer.mybids', {
             url: "/bybids",
+            controller: "buyerCtrl",
             templateUrl: "views/buyer/mybids.html",
             data: { pageTitle: 'Buyer Dashboard | My Bids' }
         })
@@ -106,8 +107,9 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             data: { pageTitle: 'Buyer Dashboard | Bookmarks', subStateName: "Bookmarks" }
         })
         .state('buyer.createbid', {
-            parent: "root",
+            controller: "createBidCtrl",
             url:"/createbid?:id&{other}",
+            templateUrl:"views/buyer/createbid.html",
             param: { id: null, other: null },
             data: { pageTitle: "Create Bid" }
         })
