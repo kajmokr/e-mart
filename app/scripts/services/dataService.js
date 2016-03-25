@@ -202,7 +202,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
         });
     };
     
-    //GET ALL LIVE AUCTIONS
+    //GET ALL LIVE AUCTIONS BY CATEGORY
     this.getAllLiveAuctions = function (categoryID) {
         console.log("Cat ID",categoryID);
         var auctions = null;
@@ -226,6 +226,36 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             if (response!==0) { //if no error when fetching database rows
                 auctions = response.data;
                 return auctions;
+            }
+            else {
+                console.log("Error response from database");
+            }
+        });
+    };
+
+    //GET AUCTIONS ENDINGSOON
+    this.getAuctionsEndingSoon = function () {
+        return request = $http({
+            method: "post",
+            url: "/scripts/php/selectRowBySql.php",
+            data: {
+                sql: "SELECT auction.auctionID, item.itemID, auction.name, auction.description, auction.instantPrice, "+
+                "auction.isActive, auction.endDate, auction.currentBidID, bid.bidID, bid.bidderID, image.imageID, "+
+                "image.image, image.itemID, item.categoryID, item.conditionID, "+
+                "IFNULL((select max(bid.bidPrice) from bid WHERE bid.auctionID=auction.auctionID),auction.startingPrice) "+
+                "as auctionPrice "+
+                "FROM auction,item,bid,image "+
+                "WHERE auction.startDate < now() AND auction.endDate > now() AND auction.itemID = item.itemID AND auction.isActive=1 "+
+                "AND image.itemID=auction.itemID "+
+                "GROUP BY auction.auctionID "+
+                "ORDER BY auction.endDate" +
+                ";"
+            },
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function (response) {
+            console.log("GOT ENDING SOON AUCTIONS", response);
+            if (response!==0) { //if no error when fetching database rows
+                return response.data;
             }
             else {
                 console.log("Error response from database");

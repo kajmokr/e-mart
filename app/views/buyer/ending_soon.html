@@ -1,4 +1,4 @@
-<div class="col-md-3" ng-repeat="(key,auction) in data.endingsoon track by $index">
+<div class="col-md-3" ng-repeat="(key,auction) in endingsoon track by $index">
     <div class="ibox">
         <div class="ibox-content product-box">
 
@@ -13,9 +13,9 @@
                         <span class="product-price">
                             £{{auction.auctionPrice}}
                         </span>
-                <a class="text-muted" data-ui-sref="ecommerce.grid({categoryid:{{auction.categoryID}}})">{{data.getCategoryName(auction.categoryID)}}</a>
+                <a class="text-muted" data-ui-sref="ecommerce.grid({categoryid:{{auction.categoryID}}})">{{getCategoryName(auction.categoryID)}}</a>
                 <a class="product-name" data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}}})">{{auction.name}}</a>
-                <small class="label label-warning"> {{data.getConditionName(auction.conditionID)}}</small>
+                <small class="label label-warning"> {{getConditionName(auction.conditionID)}}</small>
 
 
                 <div class="small m-t-xs">

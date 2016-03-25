@@ -8,18 +8,22 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     
     console.log($stateParams.categoryid);
 
-    // var auctionsPromise = dataService.getAllLiveAuctions($stateParams.categoryid);
-    // auctionsPromise.then(function(result) {
-    //     $scope.auctions = result;
-    // });
-    
+    //GET AUCTIONS BY CATEGORY
     if ( $stateParams.categoryid !== 'undefined' ){
         var auctionsPromise = dataService.getAllLiveAuctions($stateParams.categoryid);
         auctionsPromise.then(function(result) {
             $scope.auctions = result;
         });
     }
-    
+
+    //GET AUCTIONS ENDING SOON
+    var endingSoonAuctionsPromise = dataService.getAuctionsEndingSoon();
+    endingSoonAuctionsPromise.then(function(result) {
+        $scope.endingsoon = result;
+    });
+
+
+    //GET A SPECIFIC AUCTION
     if ( $stateParams.auctionid !== 'undefined'){
         var auctionPromise = dataService.getSingleAuction($stateParams.auctionid);
         auctionPromise.then(function(result) {
@@ -27,8 +31,10 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
             $scope.auction = result;
         });
     }
-    
 
+    //
+    
+    //TOGGLE THE VIEW
     $scope.toggleView = function() {
         if ($state.current.name == "ecommerce.grid"){
             $state.go("ecommerce.list");
@@ -36,10 +42,12 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
         else{ $state.go("ecommerce.grid"); }
     };
 
+    //GET NAME OF CATEGORY BASED ON CATEGORYID
     $scope.getCategoryName = function (categoryID) {
          return $rootScope.rootData.hashedCategories[categoryID].name;
     };
 
+    //GET NAME OF CONDITION BASED ON CONDITIONID
     $scope.getConditionName = function (conditionID) {
          return $rootScope.rootData.hashedConditions[conditionID].name;
     };
@@ -48,12 +56,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     // $scope.goToURL = function (email, subject) {
     //     $window.open("mailto:"+email+"?Subject="+subject, "_blank");
     // };
-    //
-    // // var myDataPromise = dataService.getData();
-    // // myDataPromise.then(function(result) {
-    // //     $rootScope.rootData.categories = result.categories;
-    // //     $rootScope.rootData.conditions = result.conditions;
-    // // });
+
     //
     // // $scope.data.getCategoryOfItem = function (item) {
     // //     return dataService.hashedCategories[item.categoryID].name;
@@ -116,13 +119,6 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     // // };
     //
     //
-    // $scope.data.getCategoryOfItem = function (item) {
-    //     return dataService.hashedCategories[item.categoryID].name;
-    // };
-    //
-    // $scope.data.getConditionOfItem = function (item) {
-    //     return dataService.hashedConditions[item.conditionID].name;
-    // };
     //
     // $scope.data.getItemNamebyID = function (itemID) {
     //     return $scope.data.hashedItems[itemID].name;
@@ -130,49 +126,6 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     //
     // $scope.data.createAuction = function () {
     //     $state.go('addauction');
-    // };
-    //
-    // $scope.data.deleteItem = function (itemID) {
-    //     swal({
-    //         title: "Are you sure?",
-    //         text: "Deleting this item cannot be undone!",
-    //         type: "warning",
-    //         showCancelButton: true,
-    //         confirmButtonColor: "#DD6B55",
-    //         confirmButtonText: "Yes",
-    //         cancelButtonText: "Cancel!",
-    //         allowOutsideClick: true,
-    //         closeOnConfirm: false,
-    //         closeOnCancel: true
-    //     }, function(isConfirm){
-    //         if (isConfirm) {
-    //
-    //             // dataService
-    //
-    //             deleteItem.success(function (data) {
-    //                 if (data==1) {
-    //                     //Item deleted
-    //                     $state.reload();
-    //                     swal({
-    //                         title: "Success!",
-    //                         text: "Item has been deleted!",
-    //                         type: "success",
-    //                         timer: 2000,
-    //                         showConfirmButton: false
-    //                     });
-    //                 }
-    //                 else {
-    //                     swal({
-    //                         title: "Delete failed!",
-    //                         text: "Only non-auctioned items can be deleted",
-    //                         type: "warning",
-    //                         timer: 2000,
-    //                         showConfirmButton: false
-    //                     });
-    //                 }
-    //             });
-    //         }
-    //     });
     // };
     //
     // (function () {
