@@ -91,7 +91,7 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
                     insertImages.success(function (data) {
                         console.log("Image insertion response from database", data);
                         if (data == 1) {
-                            $state.go('seller.draft');
+                            $state.go('seller.draft', {}, { reload: true });
                             toaster.pop({
                                 type: 'success',
                                 title: 'Item Added',
@@ -218,7 +218,7 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
             request.success(function (data) {
                 console.log("Response: ", data);
                 if (data == 1) {
-                    $state.go('seller.onsale');
+                    $state.go('seller.onsale', {}, { reload: true });
                     toaster.pop({
                         type: 'success',
                         title: 'Auction added',

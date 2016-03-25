@@ -22,7 +22,7 @@
                         <td>{{getConditionName(i.conditionID)}}</td>
                         <td class="text-right"><button ng-click="deleteItem(i.itemID)" class="btn btn-danger m-xs"><i class="fa fa-trash"></i></button>
                             <button ui-sref="seller.edititem({itemid:i.itemID})" class="btn btn-warning m-xs"><i class="fa fa-pencil-square-o"></i></button>
-                            <button ng-click="addAuction()" class="btn btn-success m-xs"><i class="fa fa-gavel"></i></button>
+                            <button ui-sref="seller.addauction" class="btn btn-success m-xs"><i class="fa fa-gavel"></i></button>
                         </td>
                     </tr>
                     </tbody>
