@@ -2,12 +2,9 @@
  * ECOMMERCE CONTROLLER
  ********************************************************************************************************************/
 emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $cookies,
-                                            $timeout, toaster, authenticationService, dataService, $stateParams) {
+                                            $timeout, toaster, authenticationService, dataService, $stateParams, $window) {
     
     $scope.auctions = {};
-    
-    console.log($stateParams.categoryid);
-
     //GET AUCTIONS BY CATEGORY
     if ( $stateParams.categoryid !== 'undefined' ){
         var auctionsPromise = dataService.getAllLiveAuctions($stateParams.categoryid);
@@ -30,9 +27,32 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
             console.log("helllo", result);
             $scope.auction = result;
         });
+        // CHECK IF WATCHED
+        var checkIfWatched = $http({
+            method: "post",
+            url: "/scripts/php/selectRowBysql.php",
+            data: {
+                sql:"SELECT * FROM bookmark WHERE auctionID="+$stateParams.auctionid+" AND userID="+$cookies.get('userID')
+            },
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        checkIfWatched.success(function (data) {
+            console.log("response to check if watched request",data);
+            if (data.length>0) {
+                $scope.watched = true;
+                $scope.watchButtonColor = "primary";
+                $scope.watchAction = "Watching";
+            }
+            else {
+                $scope.watched = false;
+                $scope.watchButtonColor = "white"
+                $scope.watchAction = "Watch Auction";
+
+            }
+        });
     }
 
-    //
     
     //TOGGLE THE VIEW
     $scope.toggleView = function() {
@@ -51,11 +71,20 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     $scope.getConditionName = function (conditionID) {
          return $rootScope.rootData.hashedConditions[conditionID].name;
     };
-    
-    // //CONTACT BUYER / SELLER
-    // $scope.goToURL = function (email, subject) {
-    //     $window.open("mailto:"+email+"?Subject="+subject, "_blank");
-    // };
+
+
+    //ADD BOOKMARK
+    $scope.addBookmark = function (auctionID) {
+         dataService.addBookmark(auctionID).then(function (data) {
+             console.log(data);
+
+         });
+     }
+
+    //CONTACT BUYER / SELLER
+    $scope.goToURL = function (email, subject) {
+        $window.open("mailto:"+email+"?Subject="+subject, "_blank");
+    };
 
     //
     // // $scope.data.getCategoryOfItem = function (item) {
@@ -237,49 +266,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     //         }
     //     });
     //
-    //     //Check if the item is being watched already
-    //     var checkIfWatched = $http({
-    //         method: "post",
-    //         url: "/scripts/php/selectRowBysql.php",
-    //         data: {
-    //             sql:"SELECT * FROM bookmark WHERE auctionID="+$scope.data.auctionid+" AND userID="+$cookies.get('userID')
-    //         },
-    //         headers: { 'Content-Type': 'application/json' }
-    //     });
-    //
-    //     checkIfWatched.success(function (data) {
-    //         console.log("response to check if watched request",data);
-    //         if (data.length>0) {
-    //             $scope.data.watched = true;
-    //             $scope.data.watchButtonColor = "primary";
-    //             $scope.data.watchAction = "Watching";
-    //         }
-    //         else {
-    //             $scope.data.watched = false;
-    //             $scope.data.watchButtonColor = "white"
-    //             $scope.data.watchAction = "Watch Auction";
-    //
-    //         }
-    //     });
     //
     // }
-    //
-    // $scope.data.addBookmark = function (auctionID) {
-    //     dataService.addBookmark(auctionID).then(function (data) {
-    //         console.log(data);
-    //
-    //     });
-    // }
-    //
-    // $scope.data.goToURL = function (email, subject) {
-    //     $window.open("mailto:"+email+"?Subject="+subject, "_blank");
-    // }
-    // ----------------------------------------------------------------------------
-
-    
-    
-
-
-
 
 });

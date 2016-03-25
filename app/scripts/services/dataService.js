@@ -264,21 +264,24 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
     };
 
     this.getSingleAuction = function (auctionID) {
-        var auction = null;
         return request = $http({
             method: "post",
             url: "/scripts/php/selectRowBySql.php",
             data: {
-                sql:    "SELECT * " +
-                        "FROM item, auction "+
-                        "WHERE item.itemID=auction.itemID AND auction.auctionID="+ auctionID
+                sql:"SELECT auction.auctionID, item.itemID, auction.name, auction.description, auction.instantPrice, "+
+                "auction.isActive, auction.endDate, auction.currentBidID, bid.bidID, bid.bidderID, image.imageID, "+
+                "image.image, image.itemID, user.userID, user.firstName, user.userName, user.emailAddress, auction.startDate, "+
+                "IFNULL((select max(bid.bidPrice) from bid WHERE bid.auctionID=auction.auctionID),auction.startingPrice) "+
+                "as auctionPrice "+
+                "FROM auction,item,bid,image,user "+
+                "WHERE auction.auctionID="+auctionID+" AND auction.itemID = item.itemID "+
+                "AND image.itemID=auction.itemID AND auction.auctioneerID=user.userID "+
+                "GROUP BY auction.auctionID;"
             },
             headers: { 'Content-Type': 'application/json' }
         }).then(function (response) {
-            console.log("GOT LIVE AUCTIONS", response);
             if (response!==0) { //if no error when fetching database rows
-                auction = response.data[0];
-                return auction;
+                return response.data[0];
             }
             else {
                 console.log("Error response from database");

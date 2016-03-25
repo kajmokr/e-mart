@@ -102,6 +102,7 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         .state('buyer.bookmarks', {
             url: "/bookmarks",
             templateUrl: "views/buyer/bookmarks.html",
+            controller: "bookmarkCtrl",
             data: { pageTitle: 'Buyer Dashboard | Bookmarks', subStateName: "Bookmarks" }
         })
         .state('buyer.createbid', {

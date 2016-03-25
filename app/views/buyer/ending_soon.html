@@ -25,6 +25,7 @@
                     End Date: {{auction.endDate}}
                 </div>
                 <div class="m-t text-right">
+                    <button type="button" data-ng-click="addBookmark(auction.auctionID)"><i class="fa fa-bookmark-o"></i></button>
                     <a data-ui-sref="bidhistory({id:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">See History </a>
                     <a data-ui-sref="buyer.createbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">Place Bid </a>
                 </div>

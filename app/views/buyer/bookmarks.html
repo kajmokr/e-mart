@@ -1,4 +1,5 @@
-<div class="col-md-3" ng-repeat="(key,auction) in data.auctions track by $index">
+<p ng-show="bookmarks.length==0">You have no bookmarks yet. <a ui-sref="ecommerce.endingsoon">Shop around.</a></p>
+<div class="col-md-3" ng-repeat="(key,auction) in bookmarks track by $index">
     <div class="ibox">
         <div class="ibox-content product-box">
 
@@ -30,7 +31,7 @@
 
                     <a data-ui-sref="bidhistory({id:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">Bid History </a>
                     <a data-ui-sref="buyer.createbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">Create Bid </a>
-                    <button type="button" class="btn btn-xs btn-outline btn-primary"  data-ng-click="data.removeBookmark(auction.auctionID)">Remove bookmark</button>
+                    <button type="button" class="btn btn-xs btn-outline btn-primary"  data-ng-click="removeBookmark(auction.auctionID)">Remove bookmark</button>
                 </div>
             </div>
         </div>

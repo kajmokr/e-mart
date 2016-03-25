@@ -22,9 +22,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
                 },
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
-                console.log(response);
                 if (response !== 0) { //if no error when fetching database rows
-                    console.log(response);
                     $scope.data.auctions = response.data;
                     console.log($scope.data.auctions);
                     if(($scope.data.auctions).length==0){
@@ -45,51 +43,55 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
         console.log($cookies);
     })
 
-    .controller('bookmarkCtrl', function ($scope, $http, $state, $cookies, toaster, dataService) {
-        $scope.data = {}; //creating new scope that can be used inside tabset
-        (function () {
-            return request = $http({
-                method: "post",
-                url: "/scripts/php/bookmarklist.php",
-                data: {
-                    userID: $cookies.get('userID')
-                },
-                headers: {'Content-Type': 'application/json'}
-            }).then(function (response) {
+//GET BOOKMARKS AND REMOVE BOOKMARKS
+.controller('bookmarkCtrl', function ($scope, $http, $state, $cookies, toaster, dataService) {
+    (function () {
+        return request = $http({
+            method: "post",
+            url: "/scripts/php/bookmarklist.php",
+            data: {
+                userID: $cookies.get('userID')
+            },
+            headers: {'Content-Type': 'application/json'}
+        }).then(function (response) {
+            console.log(response);
+            if (response !== 0) { //if no error when fetching database rows
                 console.log(response);
-                if (response !== 0) { //if no error when fetching database rows
-                    console.log(response);
-                    $scope.data.auctions = response.data;
-                    console.log($scope.data.auctions);
-                }
-                else {
-                    console.log("Error loading drop down menu conditions and categories from database");
-                }
-            });
-        })();
-        $scope.data.removeBookmark = function (auctionID) {
-            return request = $http({
-                method: "post",
-                url: "/scripts/php/removebookmark.php",
-                data: {
-                    auctionID: auctionID,
-                    userID: $cookies.get('userID')
-                },
-                headers: {'Content-Type': 'application/json'}
-            }).then(function (response) {
-                console.log(response);
-                if (response !== 0) { //if no error when fetching database rows
-                    console.log(response);
-                    alert("Bookmark is removed!")
-                    $state.go("endingsoon")
-                }
-                else {
-                    console.log("Error loading drop down menu conditions and categories from database");
-                }
+                $scope.bookmarks = response.data;
+            }
+            else {
+                console.log("Error loading drop down menu conditions and categories from database");
+            }
+        });
+    })();
 
-            })
-        }
-    })
+    $scope.removeBookmark = function (auctionID) {
+        return request = $http({
+            method: "post",
+            url: "/scripts/php/removebookmark.php",
+            data: {
+                auctionID: auctionID,
+                userID: $cookies.get('userID')
+            },
+            headers: {'Content-Type': 'application/json'}
+        }).then(function (response) {
+            if (response !== 0) { //if no error when fetching database rows
+                toaster.pop({
+                    type: 'success',
+                    title: 'SUCCESS',
+                    body: 'Bookmark removed!',
+                    showCloseButton: false,
+                    timeout: 2500
+                })
+                $state.reload();
+            }
+            else {
+                console.log("Error loading drop down menu conditions and categories from database");
+            }
+
+        })
+    }
+})
 
     .controller('boughtItemsCtrl', function ($scope, $http, $state, $cookies, toaster, dataService) {
         console.log("Inside bought items ctrl");
