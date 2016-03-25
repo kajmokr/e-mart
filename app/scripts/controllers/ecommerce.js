@@ -8,11 +8,26 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     
     console.log($stateParams.categoryid);
 
-    var auctionPromise = dataService.getAllLiveAuctions($stateParams.categoryid);
-    auctionPromise.then(function(result) {
-        console.log(result);
-        $scope.auctions = result;
-    });
+    // var auctionsPromise = dataService.getAllLiveAuctions($stateParams.categoryid);
+    // auctionsPromise.then(function(result) {
+    //     $scope.auctions = result;
+    // });
+    
+    if ( $stateParams.categoryid !== 'undefined' ){
+        var auctionsPromise = dataService.getAllLiveAuctions($stateParams.categoryid);
+        auctionsPromise.then(function(result) {
+            $scope.auctions = result;
+        });
+    }
+    
+    if ( $stateParams.auctionid !== 'undefined'){
+        var auctionPromise = dataService.getSingleAuction($stateParams.auctionid);
+        auctionPromise.then(function(result) {
+            console.log("helllo", result);
+            $scope.auction = result;
+        });
+    }
+    
 
     $scope.toggleView = function() {
         if ($state.current.name == "ecommerce.grid"){
