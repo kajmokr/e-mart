@@ -109,6 +109,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
      // GET BID HISTORY FOR AN AUCTION
      $scope.auctionname = $stateParams.other;
     if ($stateParams.bidhistoryauctionid!=='undefined') {
+        $scope.bidhistauctionid = $stateParams.bidhistoryauctionid;
         (function () {
             console.log($stateParams);
             return request = $http({

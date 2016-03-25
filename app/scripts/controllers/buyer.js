@@ -41,6 +41,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
 
 .controller('createBidCtrl', function ($rootScope, $scope, $http, $state, $cookies,
                                         $timeout, toaster, authenticationService, dataService, $stateParams) {
+    console.log("STATE PARAMS", $stateParams);
     $scope.auctionname = $stateParams.other;
     $scope.newBid = {
         bidPrice: null

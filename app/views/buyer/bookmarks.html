@@ -27,9 +27,8 @@
                 <div class="small m-t-xs">
                     End Date: {{auction.endDate}}
                 </div>
-                <div class="m-t text-righ">
-
-                    <a data-ui-sref="bidhistory({id:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">Bid History </a>
+                <div class="m-t text-right">
+                    <a data-ui-sref="ecommerce.bidhistory({bidhistoryauctionid:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">Bid History </a>
                     <a data-ui-sref="buyer.createbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">Create Bid </a>
                     <button type="button" class="btn btn-xs btn-outline btn-primary"  data-ng-click="removeBookmark(auction.auctionID)">Remove bookmark</button>
                 </div>
