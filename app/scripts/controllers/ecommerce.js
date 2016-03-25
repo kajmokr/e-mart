@@ -86,6 +86,11 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
         $window.open("mailto:"+email+"?Subject="+subject, "_blank");
     };
 
+    //RETURN IF AUCTION IS ACTIVE
+    $scope.isActive = function (status) {
+        return status==1?true:false;
+    }
+
     //
     // // $scope.data.getCategoryOfItem = function (item) {
     // //     return dataService.hashedCategories[item.categoryID].name;
@@ -103,49 +108,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     // //     $state.go('addauction');
     // // };
     //
-    // // TODO: delete item function
-    // // $scope.data.deleteItem = function (itemID) {
-    // //     swal({
-    // //         title: "Are you sure?",
-    // //         text: "Deleting this item cannot be undone!",
-    // //         type: "warning",
-    // //         showCancelButton: true,
-    // //         confirmButtonColor: "#DD6B55",
-    // //         confirmButtonText: "Yes",
-    // //         cancelButtonText: "Cancel!",
-    // //         allowOutsideClick: true,
-    // //         closeOnConfirm: false,
-    // //         closeOnCancel: true
-    // //     }, function(isConfirm){
-    // //         if (isConfirm) {
-    // //
-    // //             dataService.deleteItem(itemID);
-    // //
-    // //             dataService.deleteItem.success(function (data) {
-    // //                 if (data==1) {
-    // //                     //Item deleted
-    // //                     $state.reload();
-    // //                     swal({
-    // //                         title: "Success!",
-    // //                         text: "Item has been deleted!",
-    // //                         type: "success",
-    // //                         timer: 2000,
-    // //                         showConfirmButton: false
-    // //                     });
-    // //                 }
-    // //                 else {
-    // //                     swal({
-    // //                         title: "Delete failed!",
-    // //                         text: "Item deletion was not completed.",
-    // //                         type: "warning",
-    // //                         timer: 2000,
-    // //                         showConfirmButton: false
-    // //                     });
-    // //                 }
-    // //             });
-    // //         }
-    // //     });
-    // // };
+
     //
     //
     //

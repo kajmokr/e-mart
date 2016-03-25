@@ -35,7 +35,7 @@
 
                     <div>
                         <div class="btn-group">
-                            <button class="btn btn-primary btn-sm" data-ui-sref="buyer.createbid({auctionid:{{auction.auctionID}}, other:'{{auction.name}}'})"><i class="fa fa-cart-plus"></i> Place Bid</button>
+                            <button data-ng-show="isActive(auction.isActive)" class="btn btn-primary btn-sm" data-ui-sref="buyer.createbid({auctionid:{{auction.auctionID}}, other:'{{auction.name}}'})"><i class="fa fa-cart-plus"></i> Place Bid</button>
                             <button class="btn btn-{{watchButtonColor}} btn-sm" data-ng-disabled="watched" data-ng-click="addBookmark(auction.auctionID)"><i class="fa fa-star"></i> {{watchAction}} </button>
                             <button class="btn btn-white btn-sm" ng-click="goToURL(auction.emailAddress, auction.name)"><i class="fa fa-envelope"></i> Contact Seller </button>
                         </div>

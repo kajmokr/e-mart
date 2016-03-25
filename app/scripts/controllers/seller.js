@@ -4,40 +4,22 @@
 emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $cookies,
                                           $timeout, toaster, authenticationService, dataService, $stateParams) {
 
-    // WATCHES STATE CHANGES AND MAKES THEM ACCESSIBLE
-    $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
 
-        switch ( to.name ){
-            case "seller.onsale": {
-                var itemPromise = dataService.getSellerAuctions($rootScope.user.userID);
-                itemPromise.then(function(result) {
-                    // TODO: THE dataService also need to return images of the products
-                    console.log(result);
-                    $scope.auctions = result;
-                });
-                break;
-            }
-            case "seller.draft" || "addauction": {
-                var draftPromise = dataService.getDraftItems($rootScope.user.userID);
-                draftPromise.then(function(result) {
-                    $scope.draftItems = result;
-                });
-                break;
-            }
-            case "seller.sold": {
-                var soldPromise = dataService.getSellerSoldItems($rootScope.user.userID);
-                soldPromise.then(function(result) {
-                    $scope.soldItems = result;
-                    console.log(result)
-                });
-                break;
-            }
-            case "seller.edititem": {
+    //GET DRAFT, SOLD AND ON SALE ITEMS
 
-            }
+    var itemPromise = dataService.getSellerAuctions($rootScope.user.userID);
+    itemPromise.then(function(result) {
+        $scope.auctions = result;
+    });
 
-        }
+    var draftPromise = dataService.getDraftItems($rootScope.user.userID);
+    draftPromise.then(function(result) {
+        $scope.draftItems = result;
+    });
 
+    var soldPromise = dataService.getSellerSoldItems($rootScope.user.userID);
+    soldPromise.then(function(result) {
+        $scope.soldItems = result;
     });
     
     // save categories and conditions on the $Scope
@@ -140,6 +122,52 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
             });
         }
     };
+
+
+    //---------------------------------------------------------------
+    // ADD ITEM METHODS
+    //---------------------------------------------------------------
+     $scope.deleteItem = function (itemID) {
+         swal({
+             title: "Are you sure?",
+             text: "Deleting this item cannot be undone!",
+             type: "warning",
+             showCancelButton: true,
+             confirmButtonColor: "#DD6B55",
+             confirmButtonText: "Yes",
+             cancelButtonText: "Cancel!",
+             allowOutsideClick: true,
+             closeOnConfirm: false,
+             closeOnCancel: true
+         }, function(isConfirm){
+             if (isConfirm) {
+
+                 var deleteItemPromise = dataService.deleteItem(itemID);
+                 deleteItemPromise.then(function (data) {
+                     if (data) {
+                         //Item deleted
+                         $state.reload();
+                         swal({
+                             title: "Success!",
+                             text: "Item has been deleted!",
+                             type: "success",
+                             timer: 2000,
+                             showConfirmButton: false
+                         });
+                     }
+                     else {
+                         swal({
+                             title: "Delete failed!",
+                             text: "Item deletion was not completed.",
+                             type: "warning",
+                             timer: 2000,
+                             showConfirmButton: false
+                         });
+                     }
+                 });
+             }
+         });
+     };
 
     //---------------------------------------------------------------
     // ADD AUCTION

@@ -12,14 +12,17 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             method: "post",
             url: "/scripts/php/selectRowBysql.php",
             data: {
-                sql: "SELECT *" +
-                " FROM item INNER JOIN auction ON item.ownerID="+ userID + " AND item.isSold=1 AND auction.auctioneerID="+ userID
+                sql: "SELECT auction.auctionID, auction.name, auction.description, auction.currentBidID, item.itemID, item.name, "+
+                "item.buyerID, item.isSold, bid.bidID, bid.bidPrice, user.userID, user.firstName, user.userName, user.emailAddress "+
+                "FROM auction, item, bid, user "+
+                "WHERE item.ownerID="+userID+
+                " AND item.isSold=1 AND auction.itemID = item.itemID AND item.buyerID=user.userID"+
+                " AND auction.currentBidID=bid.bidID GROUP BY auction.auctionID;"
             },
             headers: { 'Content-Type': 'application/json' }
         }).then(function (response) {
             if (response!==0) { //if no error when fetching database rows
-                soldItems = response.data;
-                return soldItems;
+                return response.data;
             }
             else {
                 console.log("Error response from database");
@@ -59,7 +62,8 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             method: "post",
             url: "/scripts/php/selectRowBysql.php",
             data: {
-                sql: "SELECT * FROM item WHERE ownerID="+ userID
+                sql:  "SELECT i.* FROM item i LEFT JOIN auction a ON i.itemID = a.itemID AND a.isActive=1 "
+                +"WHERE a.itemID IS NULL AND i.ownerID="+userID+" AND i.isSold=0 ;"
             },
             headers: { 'Content-Type': 'application/json' }
         }).then(function (response) {
@@ -130,7 +134,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
     this.hashedConditions = null;
     
     this.deleteItem = function(itemID) {
-        var deleteItem = $http({
+        return deleteItem = $http({
             method: 'post',
             url: "/scripts/php/editRowsBySQL.php",
             data: {
