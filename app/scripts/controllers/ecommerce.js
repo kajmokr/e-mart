@@ -5,6 +5,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
                                             $timeout, toaster, authenticationService, dataService, $stateParams, $window) {
     
     $scope.auctions = {};
+
     //GET AUCTIONS BY CATEGORY
     if ( $stateParams.categoryid !== 'undefined' ){
         var auctionsPromise = dataService.getAllLiveAuctions($stateParams.categoryid);
@@ -48,7 +49,6 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
                 $scope.watched = false;
                 $scope.watchButtonColor = "white"
                 $scope.watchAction = "Watch Auction";
-
             }
         });
     }
@@ -79,7 +79,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
              console.log(data);
 
          });
-     }
+     };
 
     //CONTACT BUYER / SELLER
     $scope.goToURL = function (email, subject) {
@@ -89,7 +89,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     //RETURN IF AUCTION IS ACTIVE
     $scope.isActive = function (status) {
         return status==1?true:false;
-    }
+    };
 
     //FORMAT DATE FUNCTIONS
     $scope.formatDate = function (phpDateTime) {
