@@ -1,3 +1,6 @@
+<progressbar ng-show="data.loadingMyBids" value="100" type="primary" class="progress-striped active"></progressbar>
+<p ng-show="data.auctions.length<1">You have not made any bids yet.</p>
+
 <div class="col-md-3" ng-repeat="(key,auction) in data.auctions track by $index">
     <div class="ibox">
         <div class="ibox-content product-box">

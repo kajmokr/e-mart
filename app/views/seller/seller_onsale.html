@@ -1,3 +1,6 @@
+<progressbar ng-show="loadingSellerAuctions" value="100" type="primary" class="progress-striped active"></progressbar>
+<p ng-show="auctions.length<1">You have not created any auctions yet. <a ui-sref="seller.addauction">Create an auction.</a></p>
+
 <div class="col-lg-12">
     <div class="ibox">
         <div class="ibox-content">
@@ -29,7 +32,7 @@
                     <td>£ {{auction[7]}}</td>
                     <td>£ {{auction[8]}}</td>
                     <td>{{auction[11] | yes_no}}</td>
-                    <td>172x</td>
+                    <td>{{auction.numViews}}</td>
                     <td class="text-right">
                         <a data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}} })" class="btn btn-primary"><i class="fa fa-eye"></i></a>
                     </td>

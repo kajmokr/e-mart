@@ -8,24 +8,30 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
 
     //GET AUCTIONS BY CATEGORY
     if ( $stateParams.categoryid !== 'undefined' ){
+        $scope.loadingByCategory = true;
         var auctionsPromise = dataService.getAllLiveAuctions($stateParams.categoryid);
         auctionsPromise.then(function(result) {
+            $scope.loadingByCategory = false;
             $scope.auctions = result;
         });
     }
 
     //GET AUCTIONS ENDING SOON
+    $scope.loadingEndingSoon = true;
     var endingSoonAuctionsPromise = dataService.getAuctionsEndingSoon();
     endingSoonAuctionsPromise.then(function(result) {
+        $scope.loadingEndingSoon = false;
         $scope.endingsoon = result;
     });
 
 
     //GET A SPECIFIC AUCTION
     if ( $stateParams.auctionid !== 'undefined'){
+        $scope.loadingAuction = true;
+
         var auctionPromise = dataService.getSingleAuction($stateParams.auctionid);
         auctionPromise.then(function(result) {
-            console.log("helllo", result);
+            $scope.loadingAuction = false;
             $scope.auction = result;
         });
         // CHECK IF WATCHED
@@ -49,6 +55,25 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
                 $scope.watched = false;
                 $scope.watchButtonColor = "white"
                 $scope.watchAction = "Watch Auction";
+            }
+        });
+
+        //INCREMENT THE VIEW COUNT OF THE AUCTION
+        var incViews = $http({
+            method: "post",
+            url: "/scripts/php/editRowsBySQL.php",
+            data: {
+                sql: "UPDATE auction SET numViews=numViews+1 WHERE auctionID="+$stateParams.auctionid
+            },
+            headers: { 'Content-Type': 'application/json' }
+        });
+        /* Successful HTTP post request or not */
+        incViews.success(function (data) {
+            if (data == 1) {
+                console.log("Views incremented");
+            }
+            else {
+                console.log("Failed to increment views");
             }
         });
     }
@@ -131,10 +156,4 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
             });
         })();
     }
-
-     // ----------------------------------------------------------------------------
-
-     // $scope.data.getItemNamebyID = function (itemID) {
-     //     return $scope.data.hashedItems[itemID].name;
-     // };
 });

@@ -9,6 +9,8 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
         $scope.data.getItemNamebyID = function (itemID) {
             return $scope.data.hashedItems[itemID].name;
         };
+
+        $scope.data.loadingMyBids = true;
         (function () {
             console.log($cookies);
             return request = $http({
@@ -20,6 +22,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
                 if (response !== 0) { //if no error when fetching database rows
+                    $scope.data.loadingMyBids = false;
                     $scope.data.auctions = response.data;
                     if(($scope.data.auctions).length==0){
                         toaster.pop({
@@ -197,6 +200,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
 
     //GET BOOKMARKS AND REMOVE BOOKMARKS
     .controller('bookmarkCtrl', function ($scope, $http, $state, $cookies, toaster, dataService) {
+        $scope.loadingBookmarks = true;
         (function () {
             return request = $http({
                 method: "post",
@@ -209,6 +213,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
                 console.log(response);
                 if (response !== 0) { //if no error when fetching database rows
                     console.log(response);
+                    $scope.loadingBookmarks = false;
                     $scope.bookmarks = response.data;
                 }
                 else {
@@ -247,6 +252,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
 
     .controller('boughtItemsCtrl', function ($scope, $http, $state, $cookies, toaster, dataService, $window) {
         console.log("Inside bought items ctrl");
+        $scope.loadingBoughtItems = true;
         var request = $http({
             method: "post",
             url: "/scripts/php/selectRowBysql.php",
@@ -264,6 +270,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
             console.log("Bought items", response);
             if (response !== 0) { //if no error when fetching database rows
                 console.log(response);
+                $scope.loadingBoughtItems = false;
                 $scope.boughtitems = response.data;
             }
             else {

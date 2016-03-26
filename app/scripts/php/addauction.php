@@ -25,8 +25,8 @@ if(!empty($_POST)) {
     $startdate = date("Y-m-d H:i:s",strtotime($startdate));
     $enddate = date("Y-m-d H:i:s",strtotime($enddate));
     // DATABASE QUERY
-    $sql = "INSERT INTO auction (auctioneerID, itemID, name, description, startingPrice, instantPrice, reservePrice, isActive, startDate, endDate)
-            VALUES ($auctioneerid,$itemid, '$auctionname','$description', $startingprice, $instantprice, $reserveprice, $isactive, '$startdate', '$enddate')";
+    $sql = "INSERT INTO auction (auctioneerID, itemID, name, description, startingPrice, instantPrice, reservePrice, isActive, startDate, endDate. numViews)
+            VALUES ($auctioneerid,$itemid, '$auctionname','$description', $startingprice, $instantprice, $reserveprice, $isactive, '$startdate', '$enddate',0)";
 
     if ($connection->query($sql) == TRUE ){
         echo true;

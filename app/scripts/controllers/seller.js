@@ -4,20 +4,26 @@
 emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $cookies,
                                           $timeout, toaster, authenticationService, dataService, $stateParams, $window) {
 
-
     //GET DRAFT, AUCTIONS AND SOLD ITEMS
+    $scope.loadingBoughtItems = true;
     var draftPromise = dataService.getDraftItems($rootScope.user.userID);
     draftPromise.then(function(result) {
+        $scope.loadingBoughtItems = false;
         $scope.draftItems = result;
+
     });
 
+    $scope.loadingSellerAuctions = true;
     var itemPromise = dataService.getSellerAuctions($rootScope.user.userID);
     itemPromise.then(function(result) {
+        $scope.loadingSellerAuctions = false;
         $scope.auctions = result;
     });
 
+    $scope.loadingSoldItems = true;
     var soldPromise = dataService.getSellerSoldItems($rootScope.user.userID);
     soldPromise.then(function(result) {
+        $scope.loadingSoldItems = false;
         $scope.soldItems = result;
     });
 

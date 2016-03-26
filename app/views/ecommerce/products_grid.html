@@ -1,3 +1,6 @@
+<progressbar ng-show="loadingByCategory" value="100" type="primary" class="progress-striped active"></progressbar>
+<p ng-show="auctions.length<1">There are currently no items on auction in this category at this moment. </p>
+
 <div class="col-md-6" ng-repeat="(key,auction) in auctions track by $index">
     <div class="ibox">
         <div class="ibox-content product-box">
@@ -22,9 +25,6 @@
                 <div class="small m-t-xs">
                     {{auction.description}}
                 </div>
-                    <div class="small">
-                        "hello"
-                     </div>
                 <div class="small m-t-xs">
                     End Date: {{auction.endDate}}
                 </div>

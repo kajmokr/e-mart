@@ -1,4 +1,7 @@
-    <div class="col-lg-12">
+<progressbar ng-show="loadingBoughtItems" value="100" type="primary" class="progress-striped active"></progressbar>
+<p ng-show="draftItems.length<1">You have not added any items yet. <a ui-sref="seller.additem">Add an item.</a></p>
+
+<div class="col-lg-12">
         <div class="ibox">
             <div class="ibox-content">
 

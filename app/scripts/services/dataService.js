@@ -38,7 +38,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             url: "/scripts/php/selectRowBysql.php",
             data: {
                 sql: "SELECT auction.auctionID, auction.name, auction.description, auction.auctioneerID, "+
-                "auction.startDate, auction.endDate, auction.startingPrice, auction.instantPrice, auction.reservePrice, item.itemID, item.name, auction.isActive FROM auction, item "+
+                "auction.startDate, auction.endDate, auction.startingPrice, auction.instantPrice, auction.reservePrice, item.itemID, item.name, auction.isActive, auction.numViews FROM auction, item "+
                 "WHERE auctioneerID="+ auctioneerID +
                 " AND auction.isActive=1 AND auction.itemID= item.itemID GROUP BY auction.auctionID;"
             },

@@ -1,3 +1,4 @@
+<progressbar ng-show="loadingBookmarks" value="100" type="primary" class="progress-striped active"></progressbar>
 <p ng-show="bookmarks.length==0">You have no bookmarks yet. <a ui-sref="ecommerce.endingsoon">Shop around.</a></p>
 <div class="col-md-3" ng-repeat="(key,auction) in bookmarks track by $index">
     <div class="ibox">
