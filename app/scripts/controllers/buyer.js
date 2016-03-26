@@ -245,9 +245,8 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
         }
     })
 
-    .controller('boughtItemsCtrl', function ($scope, $http, $state, $cookies, toaster, dataService) {
+    .controller('boughtItemsCtrl', function ($scope, $http, $state, $cookies, toaster, dataService, $window) {
         console.log("Inside bought items ctrl");
-        $scope.data = {}; //creating new scope that can be used inside tabset
         var request = $http({
             method: "post",
             url: "/scripts/php/selectRowBysql.php",
@@ -265,13 +264,17 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
             console.log("Bought items", response);
             if (response !== 0) { //if no error when fetching database rows
                 console.log(response);
-                $scope.data.boughtitems = response.data;
-                console.log($scope.data.boughtitems);
+                $scope.boughtitems = response.data;
             }
             else {
-                console.log("Error loading drop down menu conditions and categories from database");
+                console.log("Error loading bought items");
             }
         });
-        // ----------------------------------------------------------------------------
+
+
+        //CONTACT BUYER / SELLER
+        $scope.goToURL = function (email, subject) {
+            $window.open("mailto:"+email+"?Subject="+subject, "_blank");
+        };
 
     });

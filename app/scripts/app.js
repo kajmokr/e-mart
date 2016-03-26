@@ -8,8 +8,12 @@ var emart = angular.module('emart', [
     'ngCookies',
     'flow',
     'firebase',
-    'timer'
+    'timer',
+    'ng.deviceDetector',
+    'angular-clockpicker'
+
 ]);
+
 
 emart.run(function($rootScope, $state) {
     $rootScope.$state = $state;

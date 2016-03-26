@@ -97,6 +97,7 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         })
         .state('buyer.boughtItems', {
             url: "/bought-items",
+            controller: "boughtItemsCtrl",
             templateUrl: "views/buyer/boughtItems.html",
             data: { pageTitle: 'Buyer Dashboard | Bought Items', subStateName: "Bought Items" }
         })

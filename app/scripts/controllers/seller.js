@@ -180,6 +180,14 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
     function addDays(theDate, days) {
         return new Date(theDate.getTime() + days*24*60*60*1000);
     }
+
+    $scope.options = {
+      done: 'OK',
+      twelvehour: false,
+      nativeOnMobile: true
+    };
+
+
     
     $scope.auctionItem = {
         name: null,
@@ -187,15 +195,22 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
         item: 2,
         startdate: new Date(),
         enddate: addDays(new Date(), 7),
+        starttime: moment('2013-09-29 18:00'),
+        endtime: moment('2013-09-29 18:00'),
         startingprice: null,
         reserveprice: null,
         instantprice: null
     };
 
+
+
     // CREATE AN AUCTION FROM A DRAFT ITEM
     $scope.addAuction = function (auctionForm) {
-        if (auctionForm.$valid) {
-            console.log($scope.auctionItem);
+        if (true | auctionForm.$valid) {
+            $scope.auctionItem.startdate.setHours($scope.auctionItem.starttime.hour(),$scope.auctionItem.starttime.minutes());
+            $scope.auctionItem.enddate.setHours($scope.auctionItem.endtime.hour(),$scope.auctionItem.endtime.minutes());
+            $scope.startdateStr = $scope.auctionItem.startdate.toISOString();
+            $scope.enddateStr = $scope.auctionItem.enddate.toISOString();
 
             var request = $http({
                 method: "post",
@@ -208,8 +223,8 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
                     startingprice: $scope.auctionItem.startingprice,
                     reserveprice: $scope.auctionItem.reserveprice,
                     instantprice: $scope.auctionItem.instantprice,
-                    startdate: $scope.auctionItem.startdate,
-                    enddate: $scope.auctionItem.enddate
+                    startdate: $scope.startdateStr,
+                    enddate: $scope.enddateStr
                 },
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             });
@@ -237,6 +252,7 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
                     });
                 }
             });
+
         }
         else {
             toaster.pop({
