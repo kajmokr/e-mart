@@ -19,7 +19,7 @@
             <li ui-sref-active="active">
                 <a data-ui-sref="profile({userID:{{user.userID}}})"><i class="fa fa-user"></i> <span class="nav-label">{{ 'MY PROFILE' }}</span></a>
             </li>
-            <li ui-sref-active="active">
+            <li ui-sref-active="active" data-ng-if="userType === 'Seller'">
                 <a href=""><i class="fa fa-gavel"></i> <span class="nav-label">{{ 'SELLER DASHBOARD' }}</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('seller')}">
                     <li ui-sref-active="active" data-ui-sref="seller.additem"><a>Add Item</a></li>
@@ -29,14 +29,14 @@
                 </ul>
             </li>
 
-            <!--<li ui-sref-active="active">-->
-                <!--<a href=""><i class="fa fa-shopping-cart"></i> <span class="nav-label">{{ 'BUYER DASHBOARD' }}</span><span class="fa arrow"></span></a>-->
-                <!--<ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('charts')}">-->
-                    <!--<li ui-sref-active="active" data-ui-sref="buyer.mybids"><a>My Bids</a></li>-->
-                    <!--<li ui-sref-active="active" data-ui-sref="buyer.boughtItems"><a>Bought Items</a></li>-->
-                    <!--<li ui-sref-active="active" data-ui-sref="buyer.bookmarks"><a>Bookmarks</a></li>-->
-                <!--</ul>-->
-            <!--</li>-->
+            <li ui-sref-active="active" data-ng-if="userType === 'Buyer'">
+                <a href=""><i class="fa fa-shopping-cart"></i> <span class="nav-label">{{ 'BUYER DASHBOARD' }}</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" ng-class="{in: $state.includes('charts')}">
+                    <li ui-sref-active="active" data-ui-sref="buyer.mybids"><a>My Bids</a></li>
+                    <li ui-sref-active="active" data-ui-sref="buyer.boughtItems"><a>Bought Items</a></li>
+                    <li ui-sref-active="active" data-ui-sref="buyer.bookmarks"><a>Bookmarks</a></li>
+                </ul>
+            </li>
 
             <li ui-sref-active="active">
                 <a ui-sref="ecommerce.endingsoon"><i class="fa fa-clock-o"></i> <span class="nav-label">ENDING SOON</span> </a>

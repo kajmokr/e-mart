@@ -5,6 +5,7 @@ emart.controller('mainCtrl', function ($rootScope, $state, $scope, $http, $cooki
     
     $rootScope.rootData = {};
     $scope.searchTerm = "";
+    $scope.userType = "";
 
     // WATCHES STATE CHANGES AND MAKES THEM ACCESSIBLE
     $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
@@ -27,7 +28,13 @@ emart.controller('mainCtrl', function ($rootScope, $state, $scope, $http, $cooki
             $scope.searchTerm = searchTerm;
         });
     };
-    
+
+    $scope.$watch(function(){
+        return $cookies.get('userType');
+    }, function(result){
+        $scope.userType = result;
+    });
+
     //LOGOUT FUNCTION
     $rootScope.logout = function () {
         authenticationService.logout();

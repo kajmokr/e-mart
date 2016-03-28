@@ -46,7 +46,6 @@ module.exports = function (grunt) {
                         // Files you want to watch for changes
                         'app/less/**/*.less',
                         '<%= emart.app %>/scripts/{,*/}*.js',
-                        'app/styles/*.css',
                         'app/**/*.html'
                     ]
                 },
