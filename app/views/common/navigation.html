@@ -5,7 +5,7 @@
             <li class="nav-header">
                 <div class="dropdown profile-element">
                     <img alt="image" class="img-circle" src="{{ user.twProfileImage ? user.twProfileImage : 'photo.png' }}" height="42" width="42"/>
-                    <a class="dropdown-toggle" data-ui-sref="profile">
+                    <a class="dropdown-toggle" data-ui-sref="profile({userID:{{user.userID}}})" ui-sref-opts="{reload: true}">
                         <span class="clear">
                             <span class="block m-t-xs">
                                 <strong class="font-bold">{{ user.userName }}</strong>
@@ -17,7 +17,7 @@
             </li>
 
             <li ui-sref-active="active">
-                <a data-ui-sref="profile({userID:{{user.userID}}})"><i class="fa fa-user"></i> <span class="nav-label">{{ 'MY PROFILE' }}</span></a>
+                <a data-ui-sref="profile({userID:{{user.userID}}})" ui-sref-opts="{reload: true}"><i class="fa fa-user"></i> <span class="nav-label">{{ 'MY PROFILE' }}</span></a>
             </li>
             <li ui-sref-active="active" data-ng-if="userType === 'Seller'">
                 <a href=""><i class="fa fa-gavel"></i> <span class="nav-label">{{ 'SELLER DASHBOARD' }}</span><span class="fa arrow"></span></a>

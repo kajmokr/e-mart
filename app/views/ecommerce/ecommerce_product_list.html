@@ -16,19 +16,20 @@
                 </thead>
                 <tbody>
                         <tr ng-repeat="(key,auction) in auctions track by $index">
-                            <td><a data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}} })">{{auction.name}}</a></td>
-                            <td>£{{auction.bidPrice}}</td>
+                            <td><a data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}} })">{{auction.name | limitTo: 30}}</a></td>
+                            <td ng-if="auction.bidPrice">£{{auction.bidPrice}}</td>
+                            <td ng-if="!auction.bidPrice">none</td>
                             <td>£{{auction.instantPrice}}</td>
-                            <td>{{auction.endDate}}</td>
+                            <td>{{auction.endDate | date:"dd MMMM, hh:mm"}}</td>
                             <td><span class="label label-{{auction.isActive}}">status</span></td>
                             <td class="text-right">
                                 <div class="btn-group">
-                                    <button class="btn-white btn btn-xs" ui-sref="product-details">Item Info
+                                    <button class="btn-primary btn btn-xs" ui-sref="product-details">Item Info
                                     </button>
-                                    <button class="btn-white btn btn-xs" type="submit" ui-sref="viewbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" >
+                                    <button class="btn-warning btn btn-xs" type="submit" ui-sref="viewbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" >
                                         View Bid
                                     </button>
-                                    <button class="btn-white btn btn-xs" type="submit" ui-sref="createbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" >
+                                    <button class="btn-success btn btn-xs" type="submit" ui-sref="createbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" >
                                         Create Bid
                                     </button>
                                 </div>

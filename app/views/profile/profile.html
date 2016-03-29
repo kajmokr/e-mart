@@ -2,10 +2,7 @@
 <div class="col-md-4">
     <div class="widget-head-color-box navy-bg p-lg m-0 text-center">
         <div class="m-b-md">
-            <h2 class="font-bold no-margins">
-                {{ tempUser.firstName + " " + tempUser.lastName }}
-            </h2>
-            <small>{{ tempUser.userName }}</small>
+            <h2>{{ tempUser.userName | limitTo: 20 }}</h2>
         </div>
         <img src="{{ tempUser.twProfileImage ? tempUser.twProfileImage : 'photo.png' }}" height="100" width="100" class="img-circle circle-border m-b-md" alt="profile">
         <div>
@@ -13,31 +10,22 @@
         </div>
     </div>
 
-    <div class="ibox float-e-margins">
+    <div class="ibox float-e-margins" data-ng-if="tempUser.ratings">
         <div class="ibox-content profile-content">
             <div class="text-center">
-                <div star-rating data-rating-value="user.ratingsAvg" data-max="5" data-rating-total="user.ratings.length"></div>
+                <div star-rating data-rating-value="tempUser.ratingsAvg" data-max="5" data-rating-total="tempUser.ratings.length"></div>
+                <p>
+                    Average Rating : {{ tempUser.ratingsAvg | limitTo: 4 }}
+                </p>
             </div>
-            <div class="text-center">
-                <a data-ng-click="viewRatings()">View All Ratings</a>
-            </div>
+
             <hr>
             <h4><strong>About me</strong></h4>
-            <p><i class="fa fa-map-marker m-r-sm"></i><a target="_blank" href="{{ 'https://www.google.co.uk/maps/place/' + tempUser.city }}">&nbsp;{{ tempUser.city }}</a></p>
+            <p><i class="fa fa-map-marker m-r-sm"></i><a target="_blank" href="{{ 'https://www.google.co.uk/maps/place/' + tempUser.city }}">&nbsp;{{ tempUser.city | limitTo: 30 }}</a></p>
             <p><i class="fa fa-calendar m-r-sm"></i>{{ tempUser.userType }} since {{ tempUser.dateRegistered | date:"MMMM yyyy" }}</p>
             <hr>
-
-            <div class="user-button" data-ng-if="tempUser.userType == 'Seller'">
-                <div class="row text-center">
-                    <div class="col-md-6">
-                        <button data-ng-click="viewAuctions()" type="button" class="btn btn-primary btn-md btn-block"><i class="fa fa-shopping-cart"></i> On Sale</button>
-                        <h5><strong>{{ tempUser.auctions.length }}</strong> items</h5>
-                    </div>
-                    <div class="col-md-6">
-                        <button data-ng-click="viewSold()" type="button" class="btn btn-danger btn-md btn-block"><i class="fa fa-times-circle"></i> Sold</button>
-                        <h5><strong>{{ tempUser.soldItems.length }}</strong> items</h5>
-                    </div>
-                </div>
+            <div class="user-button" data-ng-hide="ownProfile">
+                <a class="btn btn-primary btn-block btn-sm" href="mailto:{{tempUser.emailAddress}}?Subject=EMART%20" target="_top"><i class="fa fa-envelope"></i>&nbsp;&nbsp;Contact </a>
             </div>
 
         </div>
@@ -45,8 +33,9 @@
 </div>
 
 <!--RATING SECTION-->
-<div class="col-md-8" data-ng-if="ratings">
-    <div class="ibox float-e-margins">
+<div class="col-md-8">
+    <h1 ng-if="tempUser.ratings.length<1">User has no ratings yet.</h1>
+    <div class="ibox float-e-margins" ng-if="tempUser.ratings.length>0">
         <div class="ibox-title">
             <h5>User Ratings</h5>
         </div>
@@ -54,7 +43,7 @@
             <div>
                 <div class="feed-activity-list">
                     <div class="feed-element" ng-repeat="r in tempUser.ratings">
-                        <a href="" class="pull-left">
+                        <a data-ui-sref="profile({userID:{{r.userID}}})" class="pull-left">
                             <img alt="image" class="img-circle" src="{{ r.twProfileImage ? r.twProfileImage : 'photo.png' }}">
                         </a>
 
@@ -64,7 +53,7 @@
                                     <div star-rating2 rating-value="r.starRating" max="5"></div>
                                 </span>
                             </small>
-                            <strong>{{ r.userName }}</strong> rated a product from <strong>{{ tempUser.userName }}</strong> with {{ r.starRating }} stars. <br>
+                            <a data-ui-sref="profile({userID:{{r.userID}}})"><strong>{{ r.userName }}</strong></a> rated a product from <strong>{{ tempUser.userName }}</strong> with {{ r.starRating }} stars. <br>
                             <small class="text-muted">{{ r.created }}</small>
                             <div class="well">
                                 {{ r.description }}
@@ -74,84 +63,6 @@
                 </div>
             </div>
 
-        </div>
-    </div>
-</div>
-
-<!--ON SALE SECTION-->
-<div class="col-md-8" data-ng-if="auctions">
-    <div class="col-md-6" data-ng-repeat="i in tempUser.auctions track by $index">
-        <div class="ibox">
-            <div class="ibox-content product-box">
-
-                <div class="product-imitation">
-                    <img src="{{i.image}}" width="100%" height="auto">
-                </div>
-                <div class="product-desc">
-                        <span class="product-bookmark">
-                             <button type="button" data-ng-click="data.addBookmark(i.auctionID)"><i class="fa fa-bookmark-o"></i></button>
-                        </span>
-
-                        <span class="product-price">
-                            £{{i.auctionPrice}}
-                        </span>
-
-                    <a class="text-muted" data-ui-sref="ecommerce.grid({categoryid:{{i.categoryID}}})">{{data.getCategoryName(i.categoryID)}}</a>
-                    <a class="product-name" data-ui-sref="ecommerce.details({auctionid:{{i.auctionID}}})">{{i.name}}</a>
-                    <small class="label label-warning"> {{data.getConditionName(i.conditionID)}}</small>
-
-
-                    <div class="small m-t-xs">
-                        {{i.description}}
-                    </div>
-                    <div class="small m-t-xs">
-                        End Date: {{i.endDate}}
-                    </div>
-                    <div class="m-t text-right">
-                        <a data-ui-sref="bidhistory({id:{{i.auctionID}}, other:'{{i.name}}'})" class="btn btn-xs btn-outline btn-primary">See History </a>
-                        <a data-ui-sref="buyer.createbid({id:{{i.auctionID}}, other:'{{i.name}}'})" class="btn btn-xs btn-outline btn-primary">Place Bid </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--SOLD SECTION-->
-<div class="col-md-8" data-ng-if="sold">
-    <div class="col-md-6" data-ng-repeat="i in tempUser.soldItems track by $index">
-        <div class="ibox">
-            <div class="ibox-content product-box">
-
-                <div class="product-imitation">
-                    <img src="{{i.image}}" width="100%" height="auto">
-                </div>
-                <div class="product-desc">
-                        <span class="product-bookmark">
-                             <button type="button" data-ng-click="data.addBookmark(auction.auctionID)"><i class="fa fa-bookmark-o"></i></button>
-                        </span>
-
-                        <span class="product-price">
-                            £{{i.auctionPrice}}
-                        </span>
-
-                    <a class="text-muted" data-ui-sref="ecommerce.grid({categoryid:{{i.categoryID}}})">{{data.getCategoryName(i.categoryID)}}</a>
-                    <a class="product-name" data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}}})">{{i.name}}</a>
-                    <small class="label label-warning"> {{data.getConditionName(i.conditionID)}}</small>
-
-
-                    <div class="small m-t-xs">
-                        {{i.description}}
-                    </div>
-                    <div class="small m-t-xs">
-                        End Date: {{i.endDate}}
-                    </div>
-                    <div class="m-t text-right">
-                        <a data-ui-sref="bidhistory({id:{{i.auctionID}}, other:'{{i.name}}'})" class="btn btn-xs btn-outline btn-primary">See History </a>
-                        <a data-ui-sref="buyer.createbid({id:{{i.auctionID}}, other:'{{i.name}}'})" class="btn btn-xs btn-outline btn-primary">Place Bid </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

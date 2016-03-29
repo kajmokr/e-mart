@@ -84,7 +84,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             method: "post",
             url: "/scripts/php/selectRowBySql.php",
             data: {
-                sql:'SELECT rating.description, rating.starRating, rating.created, user.userName, user.twProfileImage FROM rating INNER JOIN user ON rating.userID = '+userID+' AND rating.raterID=user.userID'
+                sql:'SELECT rating.description, rating.starRating, rating.created, user.userName, user.userID, user.twProfileImage FROM rating INNER JOIN user ON rating.userID = '+userID+' AND rating.raterID=user.userID'
             },
             headers: { 'Content-Type': 'application/json' }
         }).then(function (response) {

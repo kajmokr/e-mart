@@ -44,8 +44,8 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
             $scope.loadingAuction = false;
             $scope.auction = result;
             
-            console.log("userID cookie ", $cookies.get('userID'));
-            console.log("scope userID ", $scope.auction.userID );
+            // console.log("userID cookie ", $cookies.get('userID'));
+            // console.log("scope userID ", $scope.auction.userID );
 
             // ONLY INCREMENT VIEW COUNT OF AUCTION IF SOMEONE ELSE THAN THE SELLER VIEWS THE ITEM
             if ( $cookies.get('userID') !== $scope.auction.userID){
@@ -119,7 +119,6 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     $scope.addBookmark = function (auctionID) {
          dataService.addBookmark(auctionID).then(function (data) {
              console.log(data);
-
          });
      };
 

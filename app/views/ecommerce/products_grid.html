@@ -5,7 +5,7 @@
     <div class="ibox">
         <div class="ibox-content product-box">
 
-            <div class="product-imitation">
+            <div class="product-imitation" data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}}})">
                 <img class="img-responsive" src="{{auction.image}}">
             </div>
             <div class="product-desc">
@@ -20,7 +20,6 @@
                 <a class="text-muted" data-ui-sref="ecommerce.grid({categoryid:{{auction.categoryID}}})">{{getCategoryName(auction.categoryID)}}</a>
                 <a class="product-name" style="font-size: 12px;" data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}}})">{{auction.name | limitTo: 30 }}</a>
                 <small class="label label-warning"> {{getConditionName(auction.conditionID)}}</small>
-
 
                 <div class="small m-t-xs">
                     {{auction.description | limitTo: 25 }}

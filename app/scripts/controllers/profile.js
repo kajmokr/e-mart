@@ -4,96 +4,31 @@
 emart.controller('profileCtrl', function ($rootScope, $scope, $http, $state, $cookies,
                                           $timeout, toaster, authenticationService, dataService, $stateParams) {
 
-    $scope.ratings = true;
-    $scope.sold = false;
-    $scope.auctions = false;
-    
+    $scope.ownProfile = false;
+
     // GET INITIAL USER DATA
     var userPromise = dataService.getUser($stateParams.userID ? $stateParams.userID : $cookies.get('userID'));
     userPromise.then(function(result){
         $scope.tempUser = result.data[0];
         $scope.tempUser.dateRegistered = new Date($scope.tempUser.dateRegistered);
+
+        // if own profile hide contact button
+        if (!$stateParams.userID){
+            $scope.ownProfile = true;
+        }
     });
 
     //GET RATINGS OF CURRENT USER
     var userRatingsPromise = dataService.getUserRatings($stateParams.userID ? $stateParams.userID : $cookies.get('userID'));
     userRatingsPromise.then(function(result) {
-        console.log(result.data);
         $scope.tempUser.ratings = result.data;
+
+        // calculate the average rating for the user
+        var ratingSum = 0;
+        for (var i = 0; i < result.data.length; i++){
+            ratingSum += +result.data[i].starRating;
+        }
+        $scope.tempUser.ratingsAvg = +ratingSum / +result.data.length;
     });
 
-    //--------------------------------
-    // TOGGLE VIEWS
-    //--------------------------------
-    $scope.viewRatings = function () {
-        $scope.ratings = true;
-        $scope.auctions = false;
-        $scope.sold = false;
-
-        //GET RATINGS OF CURRENT USER
-        var userRatingsPromise = dataService.getUserRatings($stateParams.userID ? $stateParams.userID : $cookies.get('userID'));
-        userRatingsPromise.then(function(result) {
-            console.log(result.data);
-            $scope.tempUser.ratings = result.data;
-
-            if ($scope.tempUser.ratings.length == 0){
-                var message = $stateParams.userID === $cookies.get('userID') ? "You haven't received any ratings yet :/" : "User hasn't been rated yet.";
-                toaster.pop({
-                    type: 'error',
-                    title: 'Error',
-                    body: message,
-                    showCloseButton: true,
-                    timeout: 10000
-                });
-            }
-        });
-    };
-    
-    $scope.viewSold = function () {
-        $scope.sold = true;
-        $scope.ratings = false;
-        $scope.auctions = false;
-
-        // GET SOLD ITEMS OF CURRENT USER
-        var soldItemsPromise = dataService.getSellerSoldItems($stateParams.userID ? $stateParams.userID : $cookies.get('userID'));
-        soldItemsPromise.then(function(result) {
-            console.log(result.data);
-            $scope.tempUser.soldItems = result.data;
-
-            if ($scope.tempUser.soldItems.length == 0){
-                var message = $stateParams.userID === $cookies.get('userID') ? "You haven't sold anything yet!" : "User hasn't yet sold anything.";
-                toaster.pop({
-                    type: 'error',
-                    title: 'Error',
-                    body: message,
-                    showCloseButton: true,
-                    timeout: 10000
-                });
-            }
-        });
-    };
-    
-    $scope.viewAuctions = function () {
-        $scope.auctions = true;
-        $scope.sold = false;
-        $scope.ratings = false;
-
-        // GET ITEMS ON SALE OF CURRENT USER
-        var auctionsPromise = dataService.getSellerAuctions($stateParams.userID ? $stateParams.userID : $cookies.get('userID'));
-        auctionsPromise.then(function(result) {
-            console.log(result.data);
-            $scope.tempUser.auctions = result.data;
-
-            if ($scope.tempUser.auctions.length == 0){
-                var message = $stateParams.userID === $cookies.get('userID') ? "You don't have any auctions!" : "User does not have any auctions";
-                toaster.pop({
-                    type: 'error',
-                    title: 'Error',
-                    body: message,
-                    showCloseButton: true,
-                    timeout: 10000
-                });
-            }
-        });
-    };    
 });
