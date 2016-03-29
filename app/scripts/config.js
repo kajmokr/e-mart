@@ -78,7 +78,7 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             templateUrl: 'views/profile/profile.html',
             params: { userID: null },
             resolve: { authenticate: authenticate },
-            data: { name: 'My Profile', mainState: 'profile', hide: true, pageTitle: 'E-Mart: My Profile' }
+            data: { name: 'Profile View', hide: true, pageTitle: 'E-Mart: Profile' }
         })
 
         //-----------------------------------------------------
@@ -227,10 +227,8 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             data: { pageTitle: 'Search Results', name: 'Search Results', hide: true }
         })
         .state('video', {
-            parent: "root",
             url: "/video",
             templateUrl: "views/other/video.html",
-            resolve: { authenticate: authenticate },
             data: { pageTitle: 'Video', name: 'Video', hide: true }
         });
     
