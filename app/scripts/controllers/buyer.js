@@ -115,8 +115,8 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
                         showCloseButton: false,
                         timeout: 2500
                     })
-                    if ($scope.previousBidderID !=null) sendemailtobuyer();
-                    sendemailtoseller();
+                    sendemailtobidder();
+                    sendemailtoauctioneer();
 
 
                 }
@@ -133,12 +133,13 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
         }
     }
 
-    function sendemailtobuyer() {
+    function sendemailtobidder() {
         var request = $http({
             method: "post",
-            url: "/scripts/php/sendEmailtoBuyer.php",
+            url: "/scripts/php/sendEmail.php",
             data: {
-                bidderID: $scope.previousBidderID
+                bidderID: $scope.previousBidderID,
+                emailtype: "sendemailtobidder"
             },
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
@@ -155,12 +156,13 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
         })
     }
 
-    function sendemailtoseller() {
+    function sendemailtoauctioneer() {
         var request = $http({
             method: "post",
-            url: "/scripts/php/message.php",
+            url: "/scripts/php/sendEmail.php",
             data: {
-                auctionID: $stateParams.id
+                auctionID: $stateParams.id,
+                emailtype: "sendemailtoauctioneer"
             },
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
@@ -175,24 +177,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
         })
     }
 
-    function sendemessagetoseller() {
-        var request = $http({
-            method: "post",
-            url: "/scripts/php/sendEmailtoSeller.php",
-            data: {
-                auctionID: $stateParams.id
-            },
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        });
-        /* Successful HTTP post request or not */
-        request.success(function (data) {
-            if (data == true) {
-                console.log("Email sent to seller")
-            }
-            else {
-                console.log("Unexpected error has occurred :(")
-            }
-        })}
+    
     // ----------------------------------------------------------------------------
 
 
