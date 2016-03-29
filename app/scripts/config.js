@@ -153,28 +153,28 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             controller: "ecommerceCtrl",
             params: { categoryid: null , itemid: null, auctionid: null, bidid: null, bidhistoryauctionid:null, other: null},
             resolve: { authenticate: authenticate },
-            data: { mainState: 'ecommerce.grid', mainStateName: 'Browsing', name: 'Browsing Auctions', toggleView: true }
+            data: { toggleView: true }
         })
         .state('ecommerce.grid', {
             url:"/ecommerce",
             templateUrl: "views/ecommerce/products_grid.html",
-            data: { pageTitle: 'Browsing Auctions | By Category', subStateName: 'By Category' }
+            data: { name: 'Auctions', pageTitle: 'Auctions | Product Grid', subStateName: 'Product Grid' }
         })
         .state('ecommerce.list', {
             url: "/ecommerce-list",
             templateUrl: "views/ecommerce/ecommerce_product_list.html",
-            data: { pageTitle: 'E-commerce | Product List', subStateName: 'Product List' }
+            data: { name: 'Auctions', pageTitle: 'Auctions | Product List', subStateName: 'Product List' }
         })
         .state('ecommerce.details', {
             url: "/ecommerce-details",
             templateUrl: "views/ecommerce/ecommerce_product_details.html",
-            data: { pageTitle: 'Browsing Auctions | Product Details', subStateName: 'Product Details', toggleView: false }
+            data: { name: 'Auctions', pageTitle: 'Auctions | Product Details', subStateName: 'Product Details', toggleView: false }
         })
         .state('ecommerce.bidhistory', {
             url: "/bidhistory",
             //params: {auctionid: null},
             templateUrl: "views/ecommerce/bidhistory.html",
-            data: { pageTitle: 'View Bid', toggleView: false}
+            data: { pageTitle: 'View Bid', toggleView: false, hide: true, deepHide: true}
         })
         .state('ecommerce.endingsoon', {
             url: "/ecommerce-endingsoon",

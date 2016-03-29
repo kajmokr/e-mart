@@ -10,7 +10,6 @@
                     <th data-hide="phone">Current Bid</th>
                     <th data-hide="phone">Instant Price</th>
                     <th data-hide="phone">End Date</th>
-                    <th data-hide="phone">Status</th>
                     <th class="text-right" data-sort-ignore="true">Action</th>
                 </tr>
                 </thead>
@@ -21,16 +20,16 @@
                             <td ng-if="!auction.bidPrice">none</td>
                             <td>£{{auction.instantPrice}}</td>
                             <td>{{auction.endDate | date:"dd MMMM, hh:mm"}}</td>
-                            <td><span class="label label-{{auction.isActive}}">status</span></td>
                             <td class="text-right">
                                 <div class="btn-group">
-                                    <button class="btn-primary btn btn-xs" ui-sref="product-details">Item Info
+                                    <button class="btn-primary btn btn-xs" data-ng-if="userType === 'Buyer'" data-ng-click="addBookmark(auction.auctionID)">
+                                        Watch Item
                                     </button>
-                                    <button class="btn-warning btn btn-xs" type="submit" ui-sref="viewbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" >
-                                        View Bid
+                                    <button class="btn-warning btn btn-xs" type="submit" data-ui-sref="ecommerce.bidhistory({bidhistoryauctionid:{{auction.auctionID}}, other:'{{auction.name}}'})">
+                                        Bid History
                                     </button>
-                                    <button class="btn-success btn btn-xs" type="submit" ui-sref="createbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" >
-                                        Create Bid
+                                    <button class="btn-success btn btn-xs" data-ng-if="userType === 'Buyer'" type="submit" data-ui-sref="buyer.createbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})">
+                                        Place Bid
                                     </button>
                                 </div>
                             </td>

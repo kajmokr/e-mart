@@ -13,24 +13,25 @@
                              <button type="button" data-ng-click="addBookmark(auction.auctionID)"><i class="fa fa-bookmark-o"></i></button>
                         </span>
 
-                        <span class="product-price">
-                            £{{auction.auctionPrice}}
-                        </span>
-
-                <a class="text-muted" data-ui-sref="ecommerce.grid({categoryid:{{auction.categoryID}}})">{{getCategoryName(auction.categoryID)}}</a>
+                <strong>
+                    £{{auction.auctionPrice}}
+                </strong>
                 <a class="product-name" style="font-size: 12px;" data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}}})">{{auction.name | limitTo: 30 }}</a>
-                <small class="label label-warning"> {{getConditionName(auction.conditionID)}}</small>
+                <small class="label"
+                       ng-class="{ 'label-primary': getConditionName(auction.conditionID) === 'New', 'label-success': getConditionName(auction.conditionID) === 'Excellent',
+                        'label-info': getConditionName(auction.conditionID) === 'Good', 'label-warning': getConditionName(auction.conditionID) === 'Average',
+                        'label-danger': getConditionName(auction.conditionID) === 'Poor'}">{{getConditionName(auction.conditionID)}}</small>
 
                 <div class="small m-t-xs">
-                    {{auction.description | limitTo: 25 }}
+                    <a class="text-muted" data-ui-sref="ecommerce.grid({categoryid:{{auction.categoryID}}})">{{getCategoryName(auction.categoryID)}}</a>
                 </div>
                 <div class="small m-t-xs">
                     End Date: {{auction.endDate | date:"dd MMMM, hh:mm"}}
                 </div>
                 <div class="m-t text-right">
-                    <button type="button" data-ng-click="addBookmark(auction.auctionID)"><i class="fa fa-bookmark-o"></i></button>
-                    <a data-ui-sref="ecommerce.bidhistory({bidhistoryauctionid:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">See History </a>
-                    <a data-ui-sref="buyer.createbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">Place Bid </a>
+                    <button type="button" data-ng-if="userType === 'Buyer'" data-ng-click="addBookmark(auction.auctionID)"><i class="fa fa-bookmark-o"></i></button>
+                    <a data-ui-sref="ecommerce.bidhistory({bidhistoryauctionid:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">Bid History</a>
+                    <a data-ng-if="userType === 'Buyer'" data-ui-sref="buyer.createbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">Place Bid</a>
                 </div>
             </div>
         </div>

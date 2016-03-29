@@ -12,7 +12,7 @@
         <div ng-include="'views/common/topnavbar.html'"></div>
 
 
-        <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="row wrapper border-bottom white-bg page-heading" data-ng-hide="$state.current.data.deepHide">
             <div class="col-xs-8">
                 <h2>{{$state.current.data.name}}</h2>
                 <ol class="breadcrumb" data-ng-hide="$state.current.data.hide">

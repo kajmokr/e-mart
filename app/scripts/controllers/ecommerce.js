@@ -5,6 +5,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
                                             $timeout, toaster, authenticationService, dataService, $stateParams, $window) {
     
     $scope.auctions = {};
+    $scope.userType = $cookies.get('userType');
 
     //GET AUCTIONS BY CATEGORY
     if ( $stateParams.categoryid !== 'undefined' ){

@@ -30,9 +30,9 @@
                     <div class="small text-muted">
                         {{ auction.description }}
                     </div>
-                    <hr>
+                    <hr data-ng-if="userType === 'Buyer'">
 
-                    <div>
+                    <div data-ng-if="userType === 'Buyer'">
                         <div class="btn-group">
                             <button data-ng-show="isActive(auction.isActive)" class="btn btn-primary btn-sm" data-ui-sref="buyer.createbid({auctionid:{{auction.auctionID}}, other:'{{auction.name}}'})"><i class="fa fa-cart-plus"></i> Place Bid</button>
                             <button class="btn btn-{{watchButtonColor}} btn-sm" data-ng-disabled="watched" data-ng-click="addBookmark(auction.auctionID)"><i class="fa fa-star"></i> {{watchAction}} </button>
@@ -41,13 +41,6 @@
                     </div>
                 </div>
             </div>
-
-        </div>
-        <div class="ibox-footer">
-            <span class="pull-right">
-
-            </span>
         </div>
     </div>
-
 </div>

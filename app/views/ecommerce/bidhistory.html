@@ -1,27 +1,5 @@
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-10">
-        <h2>View Bids</h2>
-        <ol class="breadcrumb">
-            <li>
-                <a href="index.html">Home</a>
-            </li>
-            <li>
-                <a>Auction List</a>
-            </li>
-            <li class="active">
-                <strong>View Bids</strong>
-            </li>
-        </ol>
-    </div>
-    <div class="col-lg-2">
-
-    </div>
-</div>
-<div class="wrapper wrapper-content animated fadeInRight ecommerce">
-    <div class="row">
-
     <div class="ibox-content m-b-sm border-bottom">
-        <h2>Auction name: {{auctionname}}</h2>
+        <h2>Auction Name: {{auctionname}}</h2>
     </div>
 
     <div class="row">
@@ -44,7 +22,7 @@
                                 {{cat.userName}}
                             </td>
                             <td>
-                                {{cat.bidPrice}}
+                                £ {{cat.bidPrice}}
                             </td>
                             <td>
                                 {{formatDate(cat.dateOfBid)}}
@@ -57,6 +35,3 @@
             </div>
         </div>
     </div>
-
-    </div>
-</div>
