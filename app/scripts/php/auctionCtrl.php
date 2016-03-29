@@ -134,7 +134,7 @@ if ($result1 = $connection->query($sql1) ) {
             }
         }
     $sql4 = "UPDATE auction SET isActive=FALSE WHERE endDate < curDate()";
-    $sql5 = "UPDATE item SET isSold=FALSE WHERE itemID ="+$itemID;
+    $sql5 = "UPDATE item SET isSold=TRUE WHERE itemID = (SELECT itemID from auction WHERE endDate < curdate() LIMIT 1)";
     try {
         $connection->autocommit(FALSE);
         $connection->query($sql4);
