@@ -147,6 +147,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
      $scope.auctionname = $stateParams.other;
      $scope.bidhistauctionid = $stateParams.bidhistoryauctionid;
         (function () {
+            $scope.loadingByCategory = true;
             // console.log($stateParams);
             return request = $http({
                 method: "post",
@@ -159,6 +160,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
                 // console.log(response);
                 if (response!==0) { //if no error when fetching database rows
                     // console.log(response);
+                    $scope.loadingByCategory = false;
                     $scope.bids = response.data;
                 }
                 else {
