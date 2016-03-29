@@ -5,20 +5,7 @@
  ************************************************************************/
 
 emart.config(function ($stateProvider, $urlRouterProvider){
-
-    //Flow factory for file uploads
-
-    // flowFactoryProvider.defaults = {
-    //     target: 'php/upload.php',
-    //     permanentErrors: [404, 500, 501],
-    //     maxChunkRetries: 1,
-    //     chunkRetryInterval: 5000,
-    //     simultaneousUploads: 4
-    // };
-    // flowFactoryProvider.on('catchAll', function (event) {
-    //     console.log('catchAll', arguments);
-    // });
-
+    
     $urlRouterProvider.otherwise("/login");
 
     $stateProvider
