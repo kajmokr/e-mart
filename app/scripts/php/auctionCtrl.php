@@ -102,13 +102,23 @@ function emailtowinner($emailTO) {
 }
 
 // DATABASE QUERY
-$sql1 = "SELECT auctionID, name, auctioneerID FROM auction WHERE endDate < curDate() AND isActive=true";
+$sql1 = "SELECT auctionID, itemID, auctioneerID FROM auction WHERE endDate < curDate() AND isActive=true";
 
 if ($result1 = $connection->query($sql1) ) {
         //convert the results to an array of rows
         while ($row1 = mysqli_fetch_array($result1)) {
-            $auctionname=$row1['name'];
-            $itemID=$row1['itemID'];
+            $sql4 = "UPDATE auction SET isActive=FALSE WHERE auctionID={$row1['auctionID']}";
+            $sql5 = "UPDATE item SET isSold=TRUE, buyerID=(select bidderID from auction a LEFT JOIN bid b ON a.currentBidID = b.bidID WHERE a.auctionID={$row1['auctionID']})  WHERE itemID = {$row1['itemID']}";
+            try {
+                $connection->autocommit(FALSE);
+                $connection->query($sql4);
+                $connection->query($sql5);
+                $connection->commit();
+                //echo true;
+            } catch (Exception $e) {
+                $connection->rollback();
+                echo false;
+            }
             $sql2="SELECT emailAddress FROM user WHERE userID = {$row1['auctioneerID']}";
             if ($result2 = $connection->query($sql2) ) {
                 while ($row2= mysqli_fetch_array($result2)){
@@ -133,18 +143,7 @@ if ($result1 = $connection->query($sql1) ) {
                 echo false;
             }
         }
-    $sql4 = "UPDATE auction SET isActive=FALSE WHERE endDate < curDate()";
-    $sql5 = "UPDATE item SET isSold=TRUE WHERE itemID = (SELECT itemID from auction WHERE endDate < curdate() LIMIT 1)";
-    try {
-        $connection->autocommit(FALSE);
-        $connection->query($sql4);
-        $connection->query($sql5);
-        $connection->commit();
-        //echo true;
-    } catch (Exception $e) {
-        $connection->rollback();
-        echo false;
-    }
+    
 
     }
     else{
