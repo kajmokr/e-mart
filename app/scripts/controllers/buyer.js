@@ -12,7 +12,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
 
         $scope.data.loadingMyBids = true;
         (function () {
-            console.log($cookies);
+            // console.log($cookies);
             return request = $http({
                 method: "post",
                 url: "/scripts/php/mybids.php",
@@ -62,9 +62,9 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
               },
             headers: {'Content-Type': 'application/json'}
         }).then(function (response) {
-            console.log(response);
+            // console.log(response);
             if (response !== 0) { //if no error when fetching database rows
-                console.log(response);
+                // console.log(response);
                 $scope.currentbidPrice = response.data[0].minBidPrice;
                 if (response.data[0].minBidPrice!==response.data[0].startingPrice) {
                     $scope.previousBidderID = response.data[0].bidderID;
@@ -83,7 +83,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
 
     $scope.createBid = function () {
         // If x is Not a Number or less than one or greater than 10
-        console.log($scope.newBid.bidPrice, $scope.currentbidPrice);
+        // console.log($scope.newBid.bidPrice, $scope.currentbidPrice);
         if ($scope.newBid.bidPrice <= parseFloat($scope.currentbidPrice)) {
             toaster.pop({
                 type: 'error',
@@ -105,7 +105,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
             });
             /* Successful HTTP post request or not */
             request.success(function (data) {
-                console.log("Response: ", data);
+                // console.log("Response: ", data);
                 if (data == 1) {
                     $state.go('buyer.mybids', {}, { reload: true });
                     toaster.pop({
@@ -114,7 +114,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
                         body: 'Your bid was successfully placed!)',
                         showCloseButton: false,
                         timeout: 2500
-                    });
+                    })
                     sendemailtobidder();
                     sendemailtoauctioneer();
 
@@ -131,7 +131,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
                 }
             })
         }
-    }
+    };
 
     function sendemailtobidder() {
         var request = $http({
@@ -176,11 +176,6 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
             }
         })
     }
-
-    
-    // ----------------------------------------------------------------------------
-
-
 })
 
     //GET BOOKMARKS AND REMOVE BOOKMARKS
@@ -195,9 +190,9 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
                 },
                 headers: {'Content-Type': 'application/json'}
             }).then(function (response) {
-                console.log(response);
+                // console.log(response);
                 if (response !== 0) { //if no error when fetching database rows
-                    console.log(response);
+                    // console.log(response);
                     $scope.loadingBookmarks = false;
                     $scope.bookmarks = response.data;
                 }
@@ -275,9 +270,9 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
         });
 
         request.then(function (response) {
-            console.log("Bought items", response);
+            // console.log("Bought items", response);
             if (response !== 0) { //if no error when fetching database rows
-                console.log(response);
+                // console.log(response);
                 $scope.loadingBoughtItems = false;
                 $scope.boughtitems = response.data;
             }
@@ -285,11 +280,4 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
                 console.log("Error loading bought items");
             }
         });
-
-
-        //CONTACT BUYER / SELLER
-        $scope.goToURL = function (email, subject) {
-            $window.open("mailto:"+email+"?Subject="+subject, "_blank");
-        };
-
     });

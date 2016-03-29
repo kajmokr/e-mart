@@ -3,7 +3,7 @@
     <div class="ibox">
         <div class="ibox-content product-box">
 
-            <div class="product-imitation">
+            <div class="product-imitation" data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}}})">
                 <img class="img-responsive" src="{{auction.image}}">
             </div>
             <div class="product-desc">
@@ -26,9 +26,9 @@
                     End Date: {{auction.endDate | date:"dd MMMM, hh:mm"}}
                 </div>
                 <div class="m-t text-right">
-                    <button type="button" data-ng-click="addBookmark(auction.auctionID)"><i class="fa fa-bookmark-o"></i></button>
+                    <button type="button" data-ng-if="userType === 'Buyer'" data-ng-click="addBookmark(auction.auctionID)"><i class="fa fa-bookmark-o"></i></button>
                     <a data-ui-sref="ecommerce.bidhistory({bidhistoryauctionid:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">See History </a>
-                    <a data-ui-sref="buyer.createbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">Place Bid </a>
+                    <a data-ng-if="userType === 'Buyer'" data-ui-sref="buyer.createbid({id:{{auction.auctionID}}, other:'{{auction.name}}'})" class="btn btn-xs btn-outline btn-primary">Place Bid </a>
                 </div>
             </div>
         </div>

@@ -74,7 +74,7 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         .state('buyer', {
             templateUrl: "views/common/content.html",
             resolve: { authenticate: authenticate },
-            data: { mainState: 'buyer.bids', name: 'Buyer Dashboard' }
+            data: { name: 'Buyer Dashboard' }
         })
         .state('buyer.mybids', {
             url: "/bybids",
@@ -109,7 +109,7 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             templateUrl: "views/common/content.html",
             controller: "sellerCtrl",
             resolve: { authenticate: authenticate },
-            data: { mainState: 'seller.onsale', mainStateName: 'On Sale', name: 'Seller Dashboard', toggleView: false }
+            data: { name: 'Seller Dashboard', toggleView: false }
         })
         .state('seller.additem', {
             url:"/additem",
@@ -173,12 +173,12 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             url: "/bidhistory",
             //params: {auctionid: null},
             templateUrl: "views/ecommerce/bidhistory.html",
-            data: { pageTitle: 'View Bid', toggleView: false, hide: true, deepHide: true}
+            data: { pageTitle: 'View Bid', mainStateName: 'Buyer', toggleView: false, hide: true, deepHide: true}
         })
         .state('ecommerce.endingsoon', {
             url: "/ecommerce-endingsoon",
             templateUrl: "views/buyer/ending_soon.html",
-            data: { mainState: 'endingsoon', mainStateName: 'Buyer', name: 'Ending Soon', hide: true, toggleView: false }
+            data: { name: 'Ending Soon', hide: true, toggleView: false }
         })
             
         //-----------------------------------------------------
@@ -201,21 +201,21 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             url: "/faq",
             templateUrl: "views/other/faq.html",
             resolve: { authenticate: authenticate },
-            data: { pageTitle: 'FAQ', name: 'Help', mainStateName: 'Frequently Asked Questions' }
+            data: { pageTitle: 'FAQ', name: 'FAQ' }
         })
         .state('contact', {
             parent: "root",
             url: "/contact",
             templateUrl: "views/other/contactUs.html",
             resolve: { authenticate: authenticate },
-            data: { pageTitle: 'Contact us', name: 'Help', mainStateName: 'Contact us' }
+            data: { pageTitle: 'Contact us', name: 'Contact us' }
         })
         .state('tos', {
             parent: "root",
             url: "/tos",
             templateUrl: "views/other/tos.html",
             resolve: { authenticate: authenticate },
-            data: { pageTitle: 'Terms & Conditions', name: 'Help', mainStateName: 'Terms & Conditions' }
+            data: { pageTitle: 'Terms & Conditions', name: 'Terms & Conditions' }
         })
         .state('search', {
             parent: "root",
@@ -236,7 +236,6 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         // source: http://stackoverflow.com/questions/22537311/angular-ui-router-login-authentication
         function authenticate($q, $cookies, $state, $timeout, toaster, $rootScope) {
             if ($cookies.get('loggedIn')) {
-
                 // get logged in user from cookies
                 $rootScope.user = JSON.parse($cookies.get('user'));
                 // Resolve the promise successfully

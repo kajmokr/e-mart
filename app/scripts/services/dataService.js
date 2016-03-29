@@ -44,7 +44,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             },
             headers: { 'Content-Type': 'application/json' }
         }).then(function (response) {
-            console.log("GOT SELLER AUCTIONS", response);
+            // console.log("GOT SELLER AUCTIONS", response);
             if (response!==0) { //if no error when fetching database rows
                 auctions = response.data;
                 return auctions;
@@ -66,7 +66,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             },
             headers: { 'Content-Type': 'application/json' }
         }).then(function (response) {
-            console.log("GOT SELLER DRAFTS", response.data);
+            // console.log("GOT SELLER DRAFTS", response.data);
             if (response!==0) { //if no error when fetching database rows
                 auctions = response.data;
                 return auctions;
@@ -207,7 +207,6 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
     
     //GET ALL LIVE AUCTIONS BY CATEGORY
     this.getAllLiveAuctions = function (categoryID) {
-        console.log("Cat ID",categoryID);
         var auctions = null;
         return request = $http({
             method: "post",
@@ -225,7 +224,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             },
             headers: { 'Content-Type': 'application/json' }
         }).then(function (response) {
-            console.log("GOT LIVE AUCTIONS", response);
+            // console.log("GOT LIVE AUCTIONS", response);
             if (response!==0) { //if no error when fetching database rows
                 auctions = response.data;
                 return auctions;
@@ -256,7 +255,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             },
             headers: { 'Content-Type': 'application/json' }
         }).then(function (response) {
-            console.log("GOT ENDING SOON AUCTIONS", response);
+            // console.log("GOT ENDING SOON AUCTIONS", response);
             if (response!==0) { //if no error when fetching database rows
                 return response.data;
             }
@@ -272,7 +271,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             url: "/scripts/php/selectRowBySql.php",
             data: {
                 sql:"SELECT auction.auctionID, item.itemID, auction.name, auction.description, auction.instantPrice, "+
-                "auction.isActive, auction.endDate, auction.currentBidID, bid.bidID, bid.bidderID, image.imageID, "+
+                "auction.isActive, auction.endDate, auction.currentBidID, IFNULL(bid.bidID,0), IFNULL(bid.bidderID,0), image.imageID, "+
                 "image.image, image.itemID, user.userID, user.firstName, user.userName, user.emailAddress, auction.startDate, "+
                 "IFNULL((select max(bid.bidPrice) from bid WHERE bid.auctionID=auction.auctionID),auction.startingPrice) "+
                 "as auctionPrice "+
@@ -291,8 +290,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             }
         });
     };
-
-
+    
     //GET IMAGES FOR AN ITEM
     this.getItemImage = function(itemID) {
 
@@ -350,7 +348,6 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
     };
     
     this.searchAuctions = function (searchTerm) {
-
         var searchResults = {};
         return request = $http({
             method: "post",
@@ -374,7 +371,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             }
         });
 
-    }
+    };
     
     //START EMAILING SERVICE
     this.mailingService = function () {
@@ -383,7 +380,7 @@ emart.service('dataService', function ($http, $cookies, $state, toaster, $timeou
             url: "/scripts/php/auctionCtrl.php",
             headers: {'Content-Type': 'application/json'}
         }).then(function (response) {
-            console.log(response);
+            // console.log(response);
             if (response !== 0) { //if no error when fetching database rows
                 console.log(response, "Mailing service started");
             }

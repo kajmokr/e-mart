@@ -77,10 +77,9 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
                 },
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
-    
             /* Successful HTTP post request or not */
             request.success(function (data) {
-                console.log("Response: ",data);
+                // console.log("Response: ",data);
                 if(data[0]) {
                     $scope.newItemID = data[0];
                     //insert images into database
@@ -95,7 +94,7 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
                     });
     
                     insertImages.success(function (data) {
-                        console.log("Image insertion response from database", data);
+                        // console.log("Image insertion response from database", data);
                         if (data == 1) {
                             $state.go('seller.draft', {}, { reload: true });
                             toaster.pop({
@@ -135,7 +134,7 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
 
 
     //---------------------------------------------------------------
-    // ADD ITEM METHODS
+    // DELETE ITEM METHOD
     //---------------------------------------------------------------
      $scope.deleteItem = function (itemID) {
          swal({
@@ -151,7 +150,6 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
              closeOnCancel: true
          }, function(isConfirm){
              if (isConfirm) {
-
                  var deleteItemPromise = dataService.deleteItem(itemID);
                  deleteItemPromise.then(function (data) {
                      if (data) {
@@ -180,7 +178,7 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
      };
 
     //---------------------------------------------------------------
-    // ADD AUCTION
+    // ADD DAYS
     //---------------------------------------------------------------
     // function that adds days to date object
     function addDays(theDate, days) {
@@ -192,8 +190,6 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
       twelvehour: false,
       nativeOnMobile: true
     };
-
-
     
     $scope.auctionItem = {
         name: null,
@@ -208,8 +204,7 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
         instantprice: null
     };
 
-
-
+    
     // CREATE AN AUCTION FROM A DRAFT ITEM
     $scope.addAuction = function (auctionForm) {
         if (true | auctionForm.$valid) {
@@ -234,10 +229,9 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
                 },
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             });
-
             // Successful HTTP post request or not
             request.success(function (data) {
-                console.log("Response: ", data);
+                // console.log("Response: ", data);
                 if (data == 1) {
                     $state.go('seller.onsale', {}, { reload: true });
                     toaster.pop({
@@ -311,13 +305,12 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
 
         reqItem.success(function (data) {
             if (data) {
-                console.log("Item returned", data);
+                // console.log("Item returned", data);
                 var currentItem = $scope.editItem.itemcategory = $scope.editItem.itemcondition = data[0];
                 $scope.editItem.itemname = currentItem.name;
                 $scope.editItem.itemdescription = currentItem.description;
             }
         });
-
         //GET IMAGES FOR THE ITEM
         var getImages = $http({
             method: "post",
@@ -331,12 +324,12 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
 
         getImages.success(function (data) {
             if (data) {
-                console.log("Images returned", data);
+                // console.log("Images returned", data);
                 $scope.imageObject = data;
                 data.forEach(function (image) {
                     $scope.editItemImageStrings.push(image.image);
                 });
-                console.log($scope.editItemImageStrings);
+                // console.log($scope.editItemImageStrings);
             }
         });
 

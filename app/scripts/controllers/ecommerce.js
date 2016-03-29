@@ -8,7 +8,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     $scope.userType = $cookies.get('userType');
 
         //GET AUCTIONS BY CATEGORY
-    if ( $stateParams.categoryid !== 'undefined'){
+    if ( $stateParams.categoryid !== null){
         $scope.loadingByCategory = true;
         var auctionsPromise = dataService.getAllLiveAuctions($stateParams.categoryid);
         auctionsPromise.then(function(result) {
@@ -37,11 +37,12 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
 
 
     //GET A SPECIFIC AUCTION
-    if ( $stateParams.auctionid !== 'undefined'){
+    if ( $stateParams.auctionid !== null){
         $scope.loadingAuction = true;
 
         var auctionPromise = dataService.getSingleAuction($stateParams.auctionid);
         auctionPromise.then(function(result) {
+            
             $scope.loadingAuction = false;
             $scope.auction = result;
             
@@ -79,9 +80,8 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
             },
             headers: { 'Content-Type': 'application/json' }
         });
-
         checkIfWatched.success(function (data) {
-            console.log("response to check if watched request",data);
+            // console.log("response to check if watched request",data);
             if (data.length>0) {
                 $scope.watched = true;
                 $scope.watchButtonColor = "primary";
@@ -119,14 +119,9 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     //ADD BOOKMARK
     $scope.addBookmark = function (auctionID) {
          dataService.addBookmark(auctionID).then(function (data) {
-             console.log(data);
+             // console.log(data);
          });
      };
-
-    //CONTACT BUYER / SELLER
-    $scope.goToURL = function (email, subject) {
-        $window.open("mailto:"+email+"?Subject="+subject, "_blank");
-    };
 
     //RETURN IF AUCTION IS ACTIVE
     $scope.isActive = function (status) {
@@ -153,7 +148,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     if ($stateParams.bidhistoryauctionid!=='undefined' && $stateParams.userid === 'undefined') {
         $scope.bidhistauctionid = $stateParams.bidhistoryauctionid;
         (function () {
-            console.log($stateParams);
+            // console.log($stateParams);
             return request = $http({
                 method: "post",
                 url: "/scripts/php/bidhistory.php",
@@ -162,9 +157,9 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
                 },
                 headers: { 'Content-Type': 'application/json' }
             }).then(function (response) {
-                console.log(response);
+                // console.log(response);
                 if (response!==0) { //if no error when fetching database rows
-                    console.log(response);
+                    // console.log(response);
                     $scope.bids = response.data;
                 }
                 else {

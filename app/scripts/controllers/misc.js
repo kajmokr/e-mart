@@ -18,11 +18,10 @@ emart.controller('miscCtrl', function ($rootScope, $scope, $http, $state, $cooki
             $scope.stars = stars;
         };
 
-    console.log($stateParams);
+    // console.log($stateParams);
 
 
     $scope.saveRating = function (stars, description) {
-
             var request = $http({
                 method: "post",
                 url: "/scripts/php/saveRating.php",
