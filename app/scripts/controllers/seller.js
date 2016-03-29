@@ -275,7 +275,7 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
 
    $scope.getCategoryName = function (categoryID) {
        return $rootScope.rootData.hashedCategories[categoryID].name;
-   }
+   };
 
    $scope.getConditionName = function (conditionID) {
        return $rootScope.rootData.hashedConditions[conditionID].name;
@@ -403,6 +403,13 @@ emart.controller('sellerCtrl', function ($rootScope, $scope, $http, $state, $coo
                                 console.log("Image insertion response from database", data);
                                 if (data == 1) {
                                     $state.go('seller.draft', {}, { reload: true });
+                                    toaster.pop({
+                                        type: 'success',
+                                        title: 'Item Updated',
+                                        body: 'Your item has been updated successfully!',
+                                        showCloseButton: false,
+                                        timeout: 2500
+                                    });
                                 }
                             });
                         }

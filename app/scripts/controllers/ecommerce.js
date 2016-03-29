@@ -13,6 +13,11 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
         auctionsPromise.then(function(result) {
             $scope.loadingByCategory = false;
             $scope.auctions = result;
+
+            // CONVERT STRING DATES TO JAVASCRIPT DATES
+            for (var i = 0; i < result.length; i++){
+                $scope.auctions[i].endDate = new Date($scope.auctions[i].endDate);
+            }
         });
     }
 
@@ -22,6 +27,11 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     endingSoonAuctionsPromise.then(function(result) {
         $scope.loadingEndingSoon = false;
         $scope.endingsoon = result;
+
+        // save string date values as JavaScript dates
+        for (var i = 0; i < result.length; i++){
+            $scope.endingsoon[i].endDate = new Date($scope.endingsoon[i].endDate);
+        }
     });
 
 
@@ -33,6 +43,31 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
         auctionPromise.then(function(result) {
             $scope.loadingAuction = false;
             $scope.auction = result;
+            
+            console.log("userID cookie ", $cookies.get('userID'));
+            console.log("scope userID ", $scope.auction.userID );
+
+            // ONLY INCREMENT VIEW COUNT OF AUCTION IF SOMEONE ELSE THAN THE SELLER VIEWS THE ITEM
+            if ( $cookies.get('userID') !== $scope.auction.userID){
+                //INCREMENT THE VIEW COUNT OF THE AUCTION
+                var incViews = $http({
+                    method: "post",
+                    url: "/scripts/php/editRowsBySQL.php",
+                    data: {
+                        sql: "UPDATE auction SET numViews=numViews+1 WHERE auctionID="+$stateParams.auctionid
+                    },
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                /* Successful HTTP post request or not */
+                incViews.success(function (data) {
+                    if (data == 1) {
+                        console.log("Views incremented");
+                    }
+                    else {
+                        console.log("Failed to increment views");
+                    }
+                });
+            }
         });
         // CHECK IF WATCHED
         var checkIfWatched = $http({
@@ -53,29 +88,11 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
             }
             else {
                 $scope.watched = false;
-                $scope.watchButtonColor = "white"
+                $scope.watchButtonColor = "white";
                 $scope.watchAction = "Watch Auction";
             }
         });
 
-        //INCREMENT THE VIEW COUNT OF THE AUCTION
-        var incViews = $http({
-            method: "post",
-            url: "/scripts/php/editRowsBySQL.php",
-            data: {
-                sql: "UPDATE auction SET numViews=numViews+1 WHERE auctionID="+$stateParams.auctionid
-            },
-            headers: { 'Content-Type': 'application/json' }
-        });
-        /* Successful HTTP post request or not */
-        incViews.success(function (data) {
-            if (data == 1) {
-                console.log("Views incremented");
-            }
-            else {
-                console.log("Failed to increment views");
-            }
-        });
     }
 
     

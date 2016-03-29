@@ -1,8 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kimeshan
- */
+
 require_once("dbConnection.php");
 ob_start();
 
@@ -12,13 +9,13 @@ if(!empty($_POST)) {
 
     $postdata = file_get_contents("php://input");
     $request = json_decode($postdata);
-    $auctioneerid = $request->auctioneerid;
-    $itemid = $request -> itemid;
-    $auctionname = $request -> auctionname;
-    $description = $request -> description;
-    $startingprice = $request -> startingprice;
-    $instantprice = $request -> instantprice;
-    $reserveprice = $request -> reserveprice;
+    $auctioneerid = stripslashes($request->auctioneerid);
+    $itemid = stripslashes($request -> itemid);
+    $auctionname = mysqli_real_escape_string($connection, stripslashes($request -> auctionname));
+    $description = mysqli_real_escape_string($connection, stripslashes($request -> description));
+    $startingprice = stripslashes($request -> startingprice);
+    $instantprice = stripslashes($request -> instantprice);
+    $reserveprice = stripslashes($request -> reserveprice);
     $isactive = true;
     $startdate = $request -> startdate;
     $enddate = $request -> enddate;
@@ -26,14 +23,14 @@ if(!empty($_POST)) {
     $enddate = date("Y-m-d H:i:s",strtotime($enddate));
     // DATABASE QUERY
     $sql = "INSERT INTO auction (auctioneerID, itemID, name, description, startingPrice, instantPrice, reservePrice, isActive, startDate, endDate, numViews)
-            VALUES ($auctioneerid,$itemid, '$auctionname','$description', $startingprice, $instantprice, $reserveprice, $isactive, '$startdate', '$enddate',0)";
+            VALUES ('$auctioneerid', '$itemid', '$auctionname', '$description', '$startingprice', '$instantprice', '$reserveprice', '$isactive', '$startdate', '$enddate', 0)";
 
     if ($connection->query($sql) == TRUE ){
         echo true;
     }
     else{
         // logs errors to console
-        error_log("error" . $sql . $connection->error);
+        error_log("Error adding auction: " . $sql . $connection->error);
         echo false;
     }
 }

@@ -65,7 +65,8 @@ emart.controller('profileCtrl', function ($rootScope, $scope, $http, $state, $co
 
     var userPromise = dataService.getUser($stateParams.userID ? $stateParams.userID : $cookies.get('userID'));
     userPromise.then(function(result){
-        $scope.tempUser = result.data[0]
+        $scope.tempUser = result.data[0];
+        $scope.tempUser.dateRegistered = new Date($scope.tempUser.dateRegistered);
     });
 
     // GET ITEMS ON SALE OF CURRENT USER

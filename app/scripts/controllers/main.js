@@ -29,6 +29,7 @@ emart.controller('mainCtrl', function ($rootScope, $state, $scope, $http, $cooki
         });
     };
 
+    // WATCH USERTYPE COOKIE TO HIDE / SHOW RELEVANT FUNCTIONS
     $scope.$watch(function(){
         return $cookies.get('userType');
     }, function(result){

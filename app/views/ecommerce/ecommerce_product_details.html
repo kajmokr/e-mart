@@ -6,11 +6,7 @@
             <div class="row">
                 <div class="col-md-5">
                     <slick dots="true">
-                        <div>
-                            <div class="image-imitation">
-                                <img src="{{auction.image}}" width="100%" height="auto">
-                            </div>
-                        </div>
+                        <img class="img-responsive" src="{{auction.image}}">
                     </slick>
                 </div>
                 <div class="col-md-7">
@@ -25,7 +21,10 @@
                     </div>
                     <small>Auction started on: <i class="fa fa-clock-o"></i> {{ auction.startDate }}</small>
                     <hr>
-
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
                     <h4>Description</h4>
 
                     <div class="small text-muted">

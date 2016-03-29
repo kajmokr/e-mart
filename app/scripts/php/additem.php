@@ -13,8 +13,8 @@ if(!empty($_POST)) {
     // STORE POSTED VALUES IN VARIABLES
     $postdata = file_get_contents("php://input");
     $request = json_decode($postdata);
-    $name = $request->itemname;
-    $description = $request->description;
+    $name = mysqli_real_escape_string($connection, stripslashes($request->itemname));
+    $description = mysqli_real_escape_string($connection, stripslashes($request->description));
     $category=$request->category;
     $condition = $request->condition;
     $ownerID = $request->ownerID; //tobias

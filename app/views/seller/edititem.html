@@ -79,21 +79,29 @@
                                 <label class="col-sm-2 control-label">Images :</label>
                                 <div class="col-sm-10" flow-init flow-name="uploader.flow" flow-files-added="editItemProcessFiles($files)">
                                     <button flow-btn type="file" class="btn btn-primary">Upload Images</button>
-                                    <div class="row">
-                                        <div ng-show="editItemImageStrings.length>0" class="ibox-content">
-
-                                            <carousel interval="editItemSlideInterval">
-                                                <slide ng-repeat="image in editItemImageStrings track by $index">
-                                                    <img class="preview" ng-src="{{image}}" style="margin:auto;">
-                                                </slide>
-                                            </carousel>
-                                        </div>
-                                    </div>
+                                    <br>
+                                </div>
                             </div>
 
+                                <div class="row">
+                                    <div ng-show="editItemImageStrings.length>0" class="ibox-content col-sm-12">
+
+                                        <carousel interval="editItemSlideInterval">
+                                            <slide ng-repeat="image in editItemImageStrings track by $index">
+                                                <img class="preview" ng-src="{{image}}" style="margin:auto;">
+                                            </slide>
+                                        </carousel>
+                                    </div>
+                                </div>
+
+                            <br>
+
                             <div class="row">
-                                <div class="col-xs-12">
-                                    <button class="btn btn-block btn-primary" ng-click="editItem()">Update</button>
+                                <div class="col-xs-6">
+                                    <button class="btn btn-block btn-danger" data-ui-sref="seller.draft">Cancel</button>
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="btn btn-block btn-primary" data-ng-click="editItem()">Update</button>
                                 </div>
                             </div>
                         </fieldset>

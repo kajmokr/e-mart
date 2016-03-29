@@ -181,13 +181,13 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         .state('ecommerce.details', {
             url: "/ecommerce-details",
             templateUrl: "views/ecommerce/ecommerce_product_details.html",
-            data: { pageTitle: 'Browsing Auctions | Auction Details', subStateName: 'Auction Details' }
+            data: { pageTitle: 'Browsing Auctions | Product Details', subStateName: 'Product Details', toggleView: false }
         })
         .state('ecommerce.bidhistory', {
             url: "/bidhistory",
             //params: {auctionid: null},
             templateUrl: "views/ecommerce/bidhistory.html",
-            data: { pageTitle: 'View Bid' }
+            data: { pageTitle: 'View Bid', toggleView: false}
         })
         .state('ecommerce.endingsoon', {
             url: "/ecommerce-endingsoon",

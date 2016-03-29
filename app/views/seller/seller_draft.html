@@ -1,7 +1,7 @@
 <progressbar ng-show="loadingBoughtItems" value="100" type="primary" class="progress-striped active"></progressbar>
-<p ng-show="draftItems.length<1">You have not added any items yet. <a ui-sref="seller.additem">Add an item.</a></p>
+<h1 class="m-l-lg" ng-show="draftItems.length<1">You have not added any items yet. <a ui-sref="seller.additem">Add an item.</a></h1>
 
-<div class="col-lg-12">
+<div class="col-lg-12" ng-show="draftItems.length>0">
         <div class="ibox">
             <div class="ibox-content">
 
@@ -18,8 +18,8 @@
                     <tbody >
 
                     <tr ng-repeat="i in draftItems track by i.itemID">
-                        <td>{{i.name}}</td>
-                        <td>{{i.description}}</td>
+                        <td>{{i.name | limitTo: 30}}</td>
+                        <td>{{i.description | limitTo: 60 }}</td>
 
                         <td>{{getCategoryName(i.categoryID)}}</td>
                         <td>{{getConditionName(i.conditionID)}}</td>

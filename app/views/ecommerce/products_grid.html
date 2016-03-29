@@ -1,7 +1,7 @@
 <progressbar ng-show="loadingByCategory" value="100" type="primary" class="progress-striped active"></progressbar>
 <p ng-show="auctions.length<1">There are currently no items on auction in this category at this moment. </p>
 
-<div class="col-md-6" ng-repeat="(key,auction) in auctions track by $index">
+<div class="col-md-3" ng-repeat="(key,auction) in auctions track by $index">
     <div class="ibox">
         <div class="ibox-content product-box">
 
@@ -18,15 +18,15 @@
                         </span>
 
                 <a class="text-muted" data-ui-sref="ecommerce.grid({categoryid:{{auction.categoryID}}})">{{getCategoryName(auction.categoryID)}}</a>
-                <a class="product-name" data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}}})">{{auction.name}}</a>
+                <a class="product-name" style="font-size: 12px;" data-ui-sref="ecommerce.details({auctionid:{{auction.auctionID}}})">{{auction.name | limitTo: 30 }}</a>
                 <small class="label label-warning"> {{getConditionName(auction.conditionID)}}</small>
 
 
                 <div class="small m-t-xs">
-                    {{auction.description}}
+                    {{auction.description | limitTo: 25 }}
                 </div>
                 <div class="small m-t-xs">
-                    End Date: {{auction.endDate}}
+                    End Date: {{auction.endDate | date:"dd MMMM, hh:mm"}}
                 </div>
                 <div class="m-t text-right">
                     <button type="button" data-ng-click="addBookmark(auction.auctionID)"><i class="fa fa-bookmark-o"></i></button>

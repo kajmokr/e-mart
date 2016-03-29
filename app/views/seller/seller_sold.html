@@ -1,7 +1,7 @@
 <progressbar ng-show="loadingSoldItems" value="100" type="primary" class="progress-striped active"></progressbar>
-<p ng-show="soldItems.length<1">You have not sold any items yet. <a ui-sref="seller.addauction">Create an auction.</a></p>
+<h1 class="m-l-lg" ng-show="soldItems.length<1">You have not sold any items yet. <a ui-sref="seller.addauction">Create an auction.</a></h1>
 
-<div class="col-lg-12">
+<div class="col-lg-12" ng-if="soldItems.length>0">
     <div class="ibox">
         <div class="ibox-content">
 
