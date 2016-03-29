@@ -114,7 +114,7 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
                         body: 'Your bid was successfully placed!)',
                         showCloseButton: false,
                         timeout: 2500
-                    })
+                    });
                     sendemailtobidder();
                     sendemailtoauctioneer();
 
@@ -208,31 +208,54 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
         })();
 
         $scope.removeBookmark = function (auctionID) {
-            return request = $http({
-                method: "post",
-                url: "/scripts/php/removebookmark.php",
-                data: {
-                    auctionID: auctionID,
-                    userID: $cookies.get('userID')
-                },
-                headers: {'Content-Type': 'application/json'}
-            }).then(function (response) {
-                if (response !== 0) { //if no error when fetching database rows
-                    toaster.pop({
-                        type: 'success',
-                        title: 'SUCCESS',
-                        body: 'Bookmark removed!',
-                        showCloseButton: false,
-                        timeout: 2500
-                    })
-                    $state.reload();
-                }
-                else {
-                    console.log("Error loading drop down menu conditions and categories from database");
-                }
+            swal({
+                title: "Are you sure?",
+                text: "Deleting this bookmark cannot be undone!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes",
+                cancelButtonText: "Cancel!",
+                allowOutsideClick: true,
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, function(isConfirm){
+                if (isConfirm) {
 
-            })
-        }
+                    return request = $http({
+                        method: "post",
+                        url: "/scripts/php/removebookmark.php",
+                        data: {
+                            auctionID: auctionID,
+                            userID: $cookies.get('userID')
+                        },
+                        headers: {'Content-Type': 'application/json'}
+                    }).then(function (data) {
+                        if (data) {
+                            //Item deleted
+                            $state.reload();
+                            swal({
+                                title: "Success!",
+                                text: "Bookmark has been deleted!",
+                                type: "success",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        }
+                        else {
+                            swal({
+                                title: "Delete failed!",
+                                text: "Bookmark deletion was not completed.",
+                                type: "warning",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                }
+            });
+    }
+
     })
 
     .controller('boughtItemsCtrl', function ($scope, $http, $state, $cookies, toaster, dataService, $window) {

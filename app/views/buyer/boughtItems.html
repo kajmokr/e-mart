@@ -12,7 +12,7 @@
                         <th>Sold by</th>
                         <th>Auction ended</th>
                         <th>Final Price</th>
-                        <th data-sort-ignore="true">View</th>
+                        <th data-sort-ignore="true">Actions</th>
                     </tr>
                     </thead>
                     <tbody >
@@ -21,12 +21,15 @@
                             <td>{{i[4]}}</td>
                             <td>{{i[7]}}</td>
                             <td>£{{i[9]}}</td>
-                            <td data-ui-sref="ecommerce.details({auctionid:{{i[5]}}})" class="btn btn-primary"><i class="fa fa-eye"></i></td>
-                            <td><button ng-click="goToURL(i[10], i[6])"  class="btn btn-xs btn-warning">Contact Seller </button></td>
+                            <td>
+                                <button data-ui-sref="ecommerce.details({auctionid:{{i[5]}}})" class="btn btn-primary"><i class="fa fa-eye"></i> View Item </button>
+                                <button data-ui-sref="rate({ userid: i.auctioneerID, auctionid: i.auctionID })" class="btn btn-success"><i class="fa fa-star"></i> Rate Seller </button>
+                                <a class="btn btn-warning" href="mailto:{{i.emailAddress}}?Subject=EMART%20{{i.name}}" target="_top"><i class="fa fa-envelope"></i> Contact Seller </a>
+                            </td>
                         </tr>
                     </tbody>
-                </table>
 
+                </table>
             </div>
         </div>
     </div>

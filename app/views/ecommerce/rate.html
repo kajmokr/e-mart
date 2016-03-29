@@ -1,0 +1,56 @@
+<div class="col-md-4">
+    <div class="widget-head-color-box navy-bg p-lg m-0 text-center">
+        <div class="m-b-md" data-ui-sref="profile({userID:{{rateUser.userID}}})">
+            <h2>{{ rateUser.userName | limitTo: 20 }}</h2>
+        </div>
+        <img src="{{ rateUser.twProfileImage ? rateUser.twProfileImage : 'photo.png' }}" height="100" width="100" class="img-circle circle-border m-b-md" alt="profile">
+        <div>
+            <p><i class="fa fa-calendar m-r-sm"></i>{{ rateUser.userType }} since {{ rateUser.dateRegistered | date:"MMMM yyyy" }}</p>
+        </div>
+    </div>
+
+    <div class="ibox float-e-margins">
+        <div class="ibox-content profile-content">
+            <h4><strong>About me</strong></h4>
+            <p><i class="fa fa-map-marker m-r-sm"></i><a target="_blank" href="{{ 'https://www.google.co.uk/maps/place/' + rateUser.city }}">&nbsp;{{ rateUser.city | limitTo: 30 }}</a></p>
+            <p><i class="fa fa-calendar m-r-sm"></i>{{ rateUser.userType }} since {{ rateUser.dateRegistered | date:"MMMM yyyy" }}</p>
+        </div>
+    </div>
+</div>
+
+<!--RATING SECTION-->
+<div class="col-md-8">
+    <div  class="tabs-container">
+        <tabset>
+            <tab>
+                <tab-heading>
+                    Rate {{rateUser.firstname}} {{rateUser.lastname}}
+                </tab-heading>
+                <div  class="panel-body">
+                    <fieldset class="form-horizontal" >
+                        <div class="form-group" ><label class="col-sm-2 control-label">How many stars?</label>
+                            <div class="col-sm-10">
+                                <div star-rating3 rating-value="stars" max="5" on-rating-selected="getSelectedRating(stars)"></div>
+                            </div>
+                        </div>
+                        </br>
+                        <div class="form-group"><label class="col-sm-2 control-label">Rating description:</label>
+                            <div class="col-sm-10">
+                                <textarea name="description" placeholder="What do you think abou the user?" rows="9" data-ng-model="description"
+                                          data-ng-minlength="3"
+                                          data-ng-maxlength="1000"
+                                          data-ng-trim="false"
+                                          data-ng-required="true" class="form-control">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-primary" ng-click="saveRating(stars, description)">Save Rating</button>
+                        </div>
+                    </fieldset>
+
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>

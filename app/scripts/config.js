@@ -74,13 +74,13 @@ emart.config(function ($stateProvider, $urlRouterProvider){
         .state('buyer', {
             templateUrl: "views/common/content.html",
             resolve: { authenticate: authenticate },
-            data: { mainState: 'buyer.bids', mainStateName: 'My Bids', name: 'Buyer Dashboard' }
+            data: { mainState: 'buyer.bids', name: 'Buyer Dashboard' }
         })
         .state('buyer.mybids', {
             url: "/bybids",
             controller: "buyerCtrl",
             templateUrl: "views/buyer/mybids.html",
-            data: { pageTitle: 'Buyer Dashboard | My Bids' }
+            data: { pageTitle: 'Buyer Dashboard | My Bids', subStateName: "My Bids" }
         })
         .state('buyer.boughtItems', {
             url: "/bought-items",
@@ -99,7 +99,7 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             url:"/createbid?:id&{other}",
             templateUrl:"views/buyer/createbid.html",
             param: { id: null, other: null },
-            data: { pageTitle: "Create Bid" }
+            data: { pageTitle: "Create Bid", hide: true }
         })
 
         //-----------------------------------------------------
@@ -138,7 +138,6 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             templateUrl: "views/seller/edititem.html",
             data: { pageTitle: 'Seller Dashboard | Edit Item', subStateName: 'Edit Item' }
         })
-
         .state('seller.addauction', {
             url:"/addauction",
             templateUrl: "views/seller/addauction.html",
@@ -181,6 +180,18 @@ emart.config(function ($stateProvider, $urlRouterProvider){
             templateUrl: "views/buyer/ending_soon.html",
             data: { mainState: 'endingsoon', mainStateName: 'Buyer', name: 'Ending Soon', hide: true, toggleView: false }
         })
+            
+        //-----------------------------------------------------
+        // MISC (RATE USER)
+        //-----------------------------------------------------
+        .state('rate', {
+            parent: 'root',
+            templateUrl: "views/ecommerce/rate.html",
+            controller: "miscCtrl",
+            params: {userid: null, auctionid: null},
+            data: { hide: true, toggleView: false, deepHide: true }
+        })
+            
             
         //-----------------------------------------------------
         // HELP & OTHERS & VIDEO

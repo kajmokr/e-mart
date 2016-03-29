@@ -7,8 +7,8 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
     $scope.auctions = {};
     $scope.userType = $cookies.get('userType');
 
-    //GET AUCTIONS BY CATEGORY
-    if ( $stateParams.categoryid !== 'undefined' ){
+        //GET AUCTIONS BY CATEGORY
+    if ( $stateParams.categoryid !== 'undefined'){
         $scope.loadingByCategory = true;
         var auctionsPromise = dataService.getAllLiveAuctions($stateParams.categoryid);
         auctionsPromise.then(function(result) {
@@ -150,7 +150,7 @@ emart.controller('ecommerceCtrl', function ($rootScope, $scope, $http, $state, $
      // ----------------------------------------------------------------------------
      // GET BID HISTORY FOR AN AUCTION
      $scope.auctionname = $stateParams.other;
-    if ($stateParams.bidhistoryauctionid!=='undefined') {
+    if ($stateParams.bidhistoryauctionid!=='undefined' && $stateParams.userid === 'undefined') {
         $scope.bidhistauctionid = $stateParams.bidhistoryauctionid;
         (function () {
             console.log($stateParams);
