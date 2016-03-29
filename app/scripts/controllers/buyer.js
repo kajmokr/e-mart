@@ -55,9 +55,9 @@ emart.controller('buyerCtrl', function ($rootScope, $scope, $http, $state, $cook
             method: "post",
             url: "/scripts/php/selectRowBysql.php",
             data: {
-                sql: "SELECT bidPrice, bidderID, auction.startingPrice, auction.auctionID,"+
+                sql: "SELECT bidPrice, auction.startingPrice, auction.auctionID,"+
                     "IFNULL((select max(bid.bidPrice) from bid WHERE bid.auctionID="+$stateParams.id+
-                    "), auction.startingPrice) as minBidPrice FROM bid,auction WHERE auction.auctionID="+
+                    "), auction.startingPrice) as minBidPrice, (Select bidderID from bid where bidPrice= minBidPrice) as bidderID FROM bid,auction WHERE auction.auctionID="+
                      $stateParams.id+" GROUP BY auction.auctionID;"
               },
             headers: {'Content-Type': 'application/json'}
